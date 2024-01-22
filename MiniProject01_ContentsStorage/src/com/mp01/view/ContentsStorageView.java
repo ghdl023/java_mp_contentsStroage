@@ -69,12 +69,12 @@ public class ContentsStorageView {
 	public void diaryMenu() {
 		while(true) {
 			System.out.println("*************************************");
-			System.out.println("██████  ██  █████  ██████  ██    ██");
-			System.out.println("██   ██ ██ ██   ██ ██   ██  ██  ██  ");
-			System.out.println("██   ██ ██ ███████ ██████    ████ ");
-			System.out.println("██   ██ ██ ██   ██ ██   ██    ██   ");
-			System.out.println("██   ██ ██ ██   ██ ██   ██    ██ ");
-			System.out.println("██████  ██ ██   ██ ██   ██    ██  ");
+			System.out.println(" ____  _                  ");
+			System.out.println("|  _ \\(_) __ _ _ __ _   _ ");
+			System.out.println("| | | | |/ _` | '__| | | |");
+			System.out.println("| |_| | | (_| | |  | |_| |");
+			System.out.println("|____/|_|\\__,_|_|   \\__, |");
+			System.out.println("                     |___/ ");
 			System.out.println("*************************************");
 			
 			System.out.println("1.목록 보기");
@@ -115,12 +115,11 @@ public class ContentsStorageView {
 	public void movieMenu() {
 		while(true) {
 			System.out.println("*************************************");
-			System.out.println("██████  ██  █████  ██████  ██    ██");
-			System.out.println("██   ██ ██ ██   ██ ██   ██  ██  ██  ");
-			System.out.println("██   ██ ██ ███████ ██████    ████ ");
-			System.out.println("██   ██ ██ ██   ██ ██   ██    ██   ");
-			System.out.println("██   ██ ██ ██   ██ ██   ██    ██ ");
-			System.out.println("██████  ██ ██   ██ ██   ██    ██  ");
+			System.out.println(" __  __            _      ");
+			System.out.println("|  \\/  | _____   _(_) ___ ");
+			System.out.println("| |\\/| |/ _ \\ \\ / / |/ _ \\");
+			System.out.println("| |  | | (_) \\ V /| |  __/");
+			System.out.println("|_|  |_|\\___/ \\_/ |_|\\___|");
 			System.out.println("*************************************");
 			
 			System.out.println("1.목록 보기");
@@ -161,12 +160,11 @@ public class ContentsStorageView {
 	public void bookMenu() {
 		while(true) {
 			System.out.println("*************************************");
-			System.out.println("██████  ██  █████  ██████  ██    ██");
-			System.out.println("██   ██ ██ ██   ██ ██   ██  ██  ██  ");
-			System.out.println("██   ██ ██ ███████ ██████    ████ ");
-			System.out.println("██   ██ ██ ██   ██ ██   ██    ██   ");
-			System.out.println("██   ██ ██ ██   ██ ██   ██    ██ ");
-			System.out.println("██████  ██ ██   ██ ██   ██    ██  ");
+			System.out.println(" ____              _    ");
+			System.out.println("| __ )  ___   ___ | | __");
+			System.out.println("|  _ \\ / _ \\ / _ \\| |/ /");
+			System.out.println("| |_) | (_) | (_) |   < ");
+			System.out.println("|____/ \\___/ \\___/|_|\\_\\");
 			System.out.println("*************************************");
 			
 			System.out.println("1.목록 보기");
