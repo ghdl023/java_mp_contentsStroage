@@ -216,7 +216,9 @@ public class ContentsStorageView {
 			System.out.print("내용 : ");
 			String content = sc.nextLine();
 			
-			result = csc.updateContents(contentsId, title, content, createDate, feelings);
+			Diary d = new Diary(feelings);
+			
+			result = csc.updateContents(contentsId, title, content, createDate, d);
 			
 			
 		} else if(contentsType.equals(MOVIE_TYPE)) { // 영화

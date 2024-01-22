@@ -9,6 +9,15 @@ public class Movie extends Contents{
 	private String with;
 	private boolean isLike;
 	
+	public Movie(int starCount, String releaseDate, String director, String actors, String place, String with, boolean isLike) {
+		this.starCount = starCount;
+		this.releaseDate = releaseDate;
+		this.director = director;
+		this.actors = actors;
+		this.place = place;
+		this.with = with;
+		this.isLike = isLike;
+	}
 	
 	public Movie(String type, String title, String content, int starCount, String releaseDate, String director,
 			String actors, String createDate, String place, String with, boolean isLike) {

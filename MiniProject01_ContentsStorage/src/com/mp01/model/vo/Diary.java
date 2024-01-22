@@ -3,6 +3,9 @@ package com.mp01.model.vo;
 public class Diary extends Contents {
 	private String feelings;
 	
+	public Diary(String feelings) {
+		this.feelings = feelings;	
+	}
 	
 	public Diary(String type, String title, String content, String createDate, String feelings) {
 		super(type, title, content,createDate);

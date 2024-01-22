@@ -8,6 +8,9 @@ public class Contents {
 	private String content;
 	private String createDate;
 	
+	public Contents() {
+		
+	}
 	
 	public Contents(String type, String title, String content, String createDate) {
 		contentsId = rowId++;
