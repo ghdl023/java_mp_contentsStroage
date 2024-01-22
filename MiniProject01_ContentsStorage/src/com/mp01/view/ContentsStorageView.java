@@ -5,8 +5,10 @@ import java.util.Scanner;
 
 import com.mp01.controller.ContentsStorageController;
 import com.mp01.controller.UserController;
+import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
 import com.mp01.model.vo.Diary;
+import com.mp01.model.vo.Movie;
 import com.mp01.model.vo.User;
 
 public class ContentsStorageView {
@@ -80,6 +82,7 @@ public class ContentsStorageView {
 			System.out.println("3.일기 조회");
 			System.out.println("4.일기 수정");
 			System.out.println("5.일기 삭제");
+			System.out.println("9.메인으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
 			int selMenu = Integer.parseInt(sc.nextLine());
@@ -100,8 +103,8 @@ public class ContentsStorageView {
 					deleteContents(DIARY_TYPE);
 					break;
 				case 9: 
-					System.out.println("프로그램을 종료합니다.");
-					break;
+					System.out.println("메인으로 돌아가기");
+					return;
 				default:
 					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
@@ -110,10 +113,94 @@ public class ContentsStorageView {
 	}
 	
 	public void movieMenu() {
+		while(true) {
+			System.out.println("*************************************");
+			System.out.println("██████  ██  █████  ██████  ██    ██");
+			System.out.println("██   ██ ██ ██   ██ ██   ██  ██  ██  ");
+			System.out.println("██   ██ ██ ███████ ██████    ████ ");
+			System.out.println("██   ██ ██ ██   ██ ██   ██    ██   ");
+			System.out.println("██   ██ ██ ██   ██ ██   ██    ██ ");
+			System.out.println("██████  ██ ██   ██ ██   ██    ██  ");
+			System.out.println("*************************************");
+			
+			System.out.println("1.목록 보기");
+			System.out.println("2.영화 추가");
+			System.out.println("3.영화 조회");
+			System.out.println("4.영화 수정");
+			System.out.println("5.영화 삭제");
+			System.out.println("9.메인으로 돌아가기");
+			System.out.print("메뉴 선택 : ");
+			
+			int selMenu = Integer.parseInt(sc.nextLine());
+			switch(selMenu) {
+				case 1:
+					getContentsList(MOVIE_TYPE);
+					break;
+				case 2:
+					addContents(MOVIE_TYPE);
+					break;
+				case 3:
+					getContents(MOVIE_TYPE);
+					break;
+				case 4:
+					updateContents(MOVIE_TYPE);
+					break;
+				case 5:
+					deleteContents(MOVIE_TYPE);
+					break;
+				case 9: 
+					System.out.println("메인으로 돌아가기");
+					return;
+				default:
+					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			}
+		}
 		
 	}
 	
 	public void bookMenu() {
+		while(true) {
+			System.out.println("*************************************");
+			System.out.println("██████  ██  █████  ██████  ██    ██");
+			System.out.println("██   ██ ██ ██   ██ ██   ██  ██  ██  ");
+			System.out.println("██   ██ ██ ███████ ██████    ████ ");
+			System.out.println("██   ██ ██ ██   ██ ██   ██    ██   ");
+			System.out.println("██   ██ ██ ██   ██ ██   ██    ██ ");
+			System.out.println("██████  ██ ██   ██ ██   ██    ██  ");
+			System.out.println("*************************************");
+			
+			System.out.println("1.목록 보기");
+			System.out.println("2.책 추가");
+			System.out.println("3.책 조회");
+			System.out.println("4.책 수정");
+			System.out.println("5.책 삭제");
+			System.out.println("9.메인으로 돌아가기");
+			System.out.print("메뉴 선택 : ");
+			
+			int selMenu = Integer.parseInt(sc.nextLine());
+			switch(selMenu) {
+				case 1:
+					getContentsList(BOOK_TYPE);
+					break;
+				case 2:
+					addContents(BOOK_TYPE);
+					break;
+				case 3:
+					getContents(BOOK_TYPE);
+					break;
+				case 4:
+					updateContents(BOOK_TYPE);
+					break;
+				case 5:
+					deleteContents(BOOK_TYPE);
+					break;
+				case 9: 
+					System.out.println("메인으로 돌아가기");
+					return;
+				default:
+					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			}
+		}
 		
 	}
 	
@@ -121,11 +208,11 @@ public class ContentsStorageView {
 		List<Contents> list = csc.getContentsList(contentsType);
 		if(!list.isEmpty()) {
 			if(contentsType.equals(DIARY_TYPE)) { // 일기
-				System.out.println("NO\t날짜\t\t제목\t감정");
+				System.out.println("NO\t작성일\t\t제목\t감정");
 			} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
-				
+				System.out.println("NO\t작성일\t\t제목\t개봉일\t감독\t출연배우\t별점");
 			} else { // 책
-				
+				System.out.println("NO\t작성일\t\t제목\t작가\t출판사\t가격\t별점");
 			}
 			for(Contents c : list) {
 				System.out.println(c);
@@ -141,23 +228,67 @@ public class ContentsStorageView {
 		System.out.print("제목을 입력해주세요. : ");
 		String title = sc.nextLine();
 		
+		System.out.print("날짜를 입력해주세요.(yyyy년mm월dd일) : ");
+		String createDate = sc.nextLine();
+		
+		String content = "";
+		
 		if(contentsType.equals(DIARY_TYPE)) { // 일기
-			System.out.print("날짜를 입력해주세요.(yyyy년mm월dd일) : ");
-			String createDate = sc.nextLine();
-			
 			System.out.print("오늘을 감정으로 표현한다면 어떤 감정일까요?(기쁨,행복,슬픔,우울 등) : ");
 			String feelings = sc.nextLine();
-			
+	
 			System.out.print("내용 : ");
-			String content = sc.nextLine();
+			content = sc.nextLine();
 			
 			c = new Diary(contentsType, title, content, createDate, feelings);
 			
-			
 		} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
+			System.out.print("개봉일을 입력해주세요. : ");
+			String releaseDate = sc.nextLine();
+			
+			System.out.print("감독을 입력해주세요. : ");
+			String director = sc.nextLine();
+			
+			System.out.print("출연배우들을 입력해주세요.(,로 구분) : ");
+			String actors = sc.nextLine();
+			
+			System.out.print("별점을 입력해주세요.(1~5)");
+			int starCount = Integer.parseInt(sc.nextLine());
+			
+			System.out.print("영화를 어디서 보셨나요? : ");
+			String place = sc.nextLine();
+			
+			System.out.print("누구와 함께 보셨나요? : ");
+			String with = sc.nextLine();
+			
+			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
+			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			
+			System.out.print("내용 : ");
+			content = sc.nextLine();
+			
+			c = new Movie(contentsType, title, content, createDate, starCount, releaseDate, director, actors, place, with, isLike == 'y');
 			
 		} else { // 책
+			System.out.print("작가를 입력해주세요. : ");
+			String author = sc.nextLine();
 			
+			System.out.print("출판사를 입력해주세요. : ");
+			String publisher = sc.nextLine();
+			
+			System.out.print("가격을 입력해주세요. : ");
+			int price = Integer.parseInt(sc.nextLine());
+			
+			System.out.print("별점을 입력해주세요.(1~5)");
+			int starCount = Integer.parseInt(sc.nextLine());
+			
+			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
+			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			
+			System.out.print("내용 : ");
+			content = sc.nextLine();
+			
+			c = new Book(contentsType, title, content, createDate, starCount, author, publisher, price, isLike == 'y');
 		}
 		
 		if(csc.addContents(c)) {
@@ -179,20 +310,22 @@ public class ContentsStorageView {
 			if(contentsType.equals(DIARY_TYPE)) { // 일기
 				System.out.println("NO\t날짜\t\t제목\t감정");
 				System.out.println(c);
-				System.out.println("내용:");
-				System.out.println(c.getContent());
 			} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
-				
+				System.out.println("NO\t날짜\t\t제목\t개봉일\t감독\t출연배우\t별점");
+				System.out.println(c);
 			} else { // 책
-				
+				System.out.println("NO\t날짜\t\t제목\t작가\t출판사\t가격\t별점");
+				System.out.println(c);
 			}
+			System.out.println("내용:");
+			System.out.println(c.getContent());
+			
 		} else {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
 		}
 	}
 	
 	public void updateContents(String contentsType) {
-		Contents c = null;
 		boolean result = false;
 		
 		System.out.print("수정할 컨텐츠 NO을 입력하세요. : ");
@@ -206,25 +339,73 @@ public class ContentsStorageView {
 		System.out.print("제목을 입력해주세요. : ");
 		String title = sc.nextLine();
 		
+		System.out.print("날짜를 입력해주세요.(yyyy년mm월dd일) : ");
+		String createDate = sc.nextLine();
+		
+		String content = "";
+		
 		if(contentsType.equals(DIARY_TYPE)) { // 일기
-			System.out.print("날짜를 입력해주세요.(yyyy년mm월dd일) : ");
-			String createDate = sc.nextLine();
-			
 			System.out.print("오늘을 감정으로 표현한다면 어떤 감정일까요?(기쁨,행복,슬픔,우울 등) : ");
 			String feelings = sc.nextLine();
 			
 			System.out.print("내용 : ");
-			String content = sc.nextLine();
+			content = sc.nextLine();
 			
 			Diary d = new Diary(feelings);
 			
 			result = csc.updateContents(contentsId, title, content, createDate, d);
 			
-			
 		} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
+			System.out.print("개봉일을 입력해주세요. : ");
+			String releaseDate = sc.nextLine();
+			
+			System.out.print("감독을 입력해주세요. : ");
+			String director = sc.nextLine();
+			
+			System.out.print("출연배우들을 입력해주세요.(,로 구분) : ");
+			String actors = sc.nextLine();
+			
+			System.out.print("별점을 입력해주세요.(1~5)");
+			int starCount = Integer.parseInt(sc.nextLine());
+			
+			System.out.print("영화를 어디서 보셨나요? : ");
+			String place = sc.nextLine();
+			
+			System.out.print("누구와 함께 보셨나요? : ");
+			String with = sc.nextLine();
+			
+			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
+			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			
+			System.out.print("내용 : ");
+			content = sc.nextLine();
+			
+			Movie m = new Movie(contentsType, title, content, createDate, starCount, releaseDate, director, actors, place, with, isLike == 'y');
+			
+			result = csc.updateContents(contentsId, title, content, createDate, m);
 			
 		} else { // 책
+			System.out.print("작가를 입력해주세요. : ");
+			String author = sc.nextLine();
 			
+			System.out.print("출판사를 입력해주세요. : ");
+			String publisher = sc.nextLine();
+			
+			System.out.print("가격을 입력해주세요. : ");
+			int price = Integer.parseInt(sc.nextLine());
+			
+			System.out.print("별점을 입력해주세요.(1~5)");
+			int starCount = Integer.parseInt(sc.nextLine());
+			
+			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
+			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			
+			System.out.print("내용 : ");
+			content = sc.nextLine();
+			
+			Book b = new Book(contentsType, title, content, createDate, starCount, author, publisher, price, isLike == 'y');
+			
+			result = csc.updateContents(contentsId, title, content, createDate, b);
 		}
 		
 		if(result) {

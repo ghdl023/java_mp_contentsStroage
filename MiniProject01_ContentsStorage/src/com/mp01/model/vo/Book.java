@@ -15,8 +15,8 @@ public class Book extends Contents {
 		this.isLike = isLike;
 	}
 	
-	public Book(String type, String title, String content, int starCount, String author, String publisher,
-			String createDate, int price, boolean isLike) {
+	public Book(String type, String title, String content, String createDate, int starCount, String author, String publisher,
+			int price, boolean isLike) {
 		super(type, title, content, createDate);
 		this.starCount = starCount;
 		this.author = author;
@@ -72,8 +72,7 @@ public class Book extends Contents {
 
 	@Override
 	public String toString() {
-		return "Book [title=" + getTitle() + ", content=" + getContent() + ", starCount=" + starCount + ", author=" + author + ", publisher=" + publisher + ", createDate="
-				+ getCreateDate() + ", price=" + price + ", isLike=" + isLike + "]";
+		return String.format("%d\t%s\t\t%s\t%s\t%s\t%d\t%d", getContentsId(), getCreateDate(), getTitle(), author, publisher, price, starCount);
 	}
 	
 	

@@ -19,8 +19,8 @@ public class Movie extends Contents{
 		this.isLike = isLike;
 	}
 	
-	public Movie(String type, String title, String content, int starCount, String releaseDate, String director,
-			String actors, String createDate, String place, String with, boolean isLike) {
+	public Movie(String type, String title, String content, String createDate, int starCount, String releaseDate, String director,
+			String actors, String place, String with, boolean isLike) {
 		super(type, title, content, createDate);
 		this.starCount = starCount;
 		this.releaseDate = releaseDate;
@@ -103,8 +103,6 @@ public class Movie extends Contents{
 
 	@Override
 	public String toString() {
-		return "Movie [title="+ getTitle() + ", content=" + getContent() +", starCount=" + starCount + ", releaseDate=" + releaseDate + ", director=" + director + ", actors="
-				+ actors + ", createDate=" + getCreateDate() + ", place=" + place + ", with=" + with + ", isLike=" + isLike
-				+ "]";
+		return String.format("%d\t%s\t\t%s\t%s\t%s\t%s\t%d", getContentsId(), getCreateDate(), getTitle(), releaseDate, director, actors, starCount);
 	}
 }
