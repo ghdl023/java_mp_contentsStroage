@@ -3,6 +3,7 @@ package com.mp01.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mp01.model.dao.JDBCModelDAO;
 import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
 import com.mp01.model.vo.Diary;
@@ -11,10 +12,15 @@ import com.mp01.model.vo.User;
 
 public class ContentsStorageController {
 	private User user = UserController.user;
-	
+	private JDBCModelDAO dbConnect = new JDBCModelDAO();
 	
 	public boolean addContents(Contents c) {
-		return user.getContentsList().add(c);
+		int result = 0;
+		if(c instanceof Diary) {
+			result = dbConnect.addContents(c);
+		}
+		return result == 1;
+//		return user.getContentsList().add(c);
 		
 	}
 	
@@ -98,14 +104,15 @@ public class ContentsStorageController {
 	}
 	
 	public List<Contents> getContentsList(String contentsType) {
-		List<Contents> filteredList = new ArrayList<>(); 
-		List<Contents> list = user.getContentsList();
-		for(int i=0; i<list.size(); i++) {
-			Contents currentItem = list.get(i);
-			if(currentItem.getType().equals(contentsType)) {
-				filteredList.add(currentItem);
-			}
-		}
-		return filteredList;
+//		List<Contents> filteredList = new ArrayList<>(); 
+//		List<Contents> list = user.getContentsList();
+//		for(int i=0; i<list.size(); i++) {
+//			Contents currentItem = list.get(i);
+//			if(currentItem.getType().equals(contentsType)) {
+//				filteredList.add(currentItem);
+//			}
+//		}
+//		return filteredList;
+		return dbConnect.getContentsList(contentsType);
 	}
 }

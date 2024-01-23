@@ -16,13 +16,13 @@ public class ContentsStorageView {
 	private ContentsStorageController csc = new ContentsStorageController();
 	private Scanner sc = new Scanner(System.in);
 	
-	private final String BOOK_TYPE = "book";
-	private final String MOVIE_TYPE = "movie";
-	private final String DIARY_TYPE = "diary";
+	public static final String BOOK_TYPE = "book";
+	public static final String MOVIE_TYPE = "movie";
+	public static final String DIARY_TYPE = "diary";
 	
 	public void mainMenu() {
 		User user = UserController.user;
-		if(false && !user.isLogin()) {
+		if(!user.isLogin()) {
 			System.out.println("===== LOGIN =====");
 			
 			while(true) {
