@@ -95,25 +95,55 @@ public class JDBCModelDAO {
 		} else if(c instanceof Book) {
 			sql = "INSERT INTO book VALUES(?, ?, ?, ?, ?, ?, ?)";
 		}
+		
+		sql = "INSERT INTO CONTENTS(title, content, create_date, contents_type_id) VALUES(?, ?, ?, ?)";
+		sql = "INSERT INTO CONTENTS(id, title, content, create_date, contents_type_id, user_id) VALUES(SEQ_CTS.NEXTVAL, ?, ?, ?, ?, ?)";
 
 		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
-				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+				PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
+			
+			System.out.println(c.getTitle());
+			System.out.println(c.getContent());
+			System.out.println(c.getCreateDate());
+			System.out.println(user.getUserId());
 
-			preparedStatement.setInt(1, c.getContentsId());
-			preparedStatement.setString(2, c.getType());
-			preparedStatement.setString(3, c.getTitle());
-			preparedStatement.setString(4, c.getContent());
-			preparedStatement.setString(5, c.getCreateDate());
-
-			if(c instanceof Diary) {
-				Diary d = (Diary)c;
-				preparedStatement.setString(6, d.getFeelings()); 	
-			}
-			preparedStatement.setString(7, user.getUserId());
+			preparedStatement.setString(1, c.getTitle());
+			preparedStatement.setString(2, c.getContent());
+			preparedStatement.setString(3, c.getCreateDate());
+			preparedStatement.setInt(4, 1);
+			preparedStatement.setString(5, user.getUserId());
 			
 			insertCount = preparedStatement.executeUpdate();
 			
 			System.out.println("insertCount: " + insertCount );
+			
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+			int generatedKey = 0;
+			
+			if (rs.next()) {
+			    generatedKey = rs.getInt(1);
+			}
+			 
+			System.out.println("Inserted record's ID: " + generatedKey);
+			
+			if(c instanceof Diary) {
+				Diary d = (Diary)c;
+				sql = "INSERT INTO CONTENTS_DIARY(id, contents_id, feelings) VALUES(SEQ_CTS_DIARY.NEXTVAL, ?, ?)";
+				try (PreparedStatement preparedStatement2 = connection.prepareStatement(sql)){
+					preparedStatement2.setInt(1, generatedKey);
+					preparedStatement2.setString(2, d.getFeelings());
+					
+					insertCount = preparedStatement2.executeUpdate();
+					
+					System.out.println("insertCount: " + insertCount );
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
