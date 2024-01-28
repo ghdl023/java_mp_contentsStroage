@@ -1,7 +1,6 @@
 package com.mp01.model.vo;
 
 public class Contents {
-	private static int rowId= 1;
 	private int contentsId;
 	private String type;
 	private String title;
@@ -13,7 +12,6 @@ public class Contents {
 	}
 	
 	public Contents(String type, String title, String content, String createDate) {
-		contentsId = rowId++;
 		this.type = type;
 		this.title = title;
 		this.content = content;
