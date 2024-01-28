@@ -15,13 +15,7 @@ public class ContentsStorageController {
 	private JDBCModelDAO dbConnect = new JDBCModelDAO();
 	
 	public boolean addContents(Contents c) {
-		int result = 0;
-		if(c instanceof Diary) {
-			result = dbConnect.addContents(c);
-		}
-		return result == 1;
-//		return user.getContentsList().add(c);
-		
+		return dbConnect.addContents(c) == 1;
 	}
 	
 	public Contents getContents(int contentsId) {
@@ -64,8 +58,8 @@ public class ContentsStorageController {
 						m.setDirector(mm.getDirector());
 						m.setActors(mm.getActors());
 						m.setPlace(mm.getPlace());
-						m.setWith(mm.getWith());
-						m.setLike(mm.isLike());
+						m.setWiths(mm.getWiths());
+						m.setIsLikeYn(mm.getIsLikeYn());
 					}
 				} else if(currentItem instanceof Book) { // 책
 					Book b = (Book)currentItem;
@@ -78,7 +72,7 @@ public class ContentsStorageController {
 						b.setAuthor(bb.getAuthor());
 						b.setPublisher(bb.getPublisher());
 						b.setPrice(bb.getPrice());
-						b.setLike(bb.isLike());
+						b.setIsLikeYn(bb.getIsLikeYn());
 					}
 				}
 				

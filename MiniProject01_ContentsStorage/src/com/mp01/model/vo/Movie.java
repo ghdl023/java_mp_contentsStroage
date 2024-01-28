@@ -1,34 +1,34 @@
 package com.mp01.model.vo;
 
 public class Movie extends Contents{
-	private int starCount;
 	private String releaseDate;
 	private String director;
 	private String actors;
 	private String place;
-	private String with;
-	private boolean isLike;
+	private String withs;
+	private String isLikeYn;
+	private int starCount;
 	
-	public Movie(int starCount, String releaseDate, String director, String actors, String place, String with, boolean isLike) {
-		this.starCount = starCount;
+	public Movie(String releaseDate, String director, String actors, String place, String withs, String isLikeYn, int starCount) {
 		this.releaseDate = releaseDate;
 		this.director = director;
 		this.actors = actors;
 		this.place = place;
-		this.with = with;
-		this.isLike = isLike;
+		this.withs = withs;
+		this.isLikeYn = isLikeYn;
+		this.starCount = starCount;
 	}
 	
-	public Movie(String type, String title, String content, String createDate, int starCount, String releaseDate, String director,
-			String actors, String place, String with, boolean isLike) {
+	public Movie(String type, String title, String content, String createDate, String releaseDate, String director,
+			String actors, String place, String withs, String isLikeYn, int starCount) {
 		super(type, title, content, createDate);
-		this.starCount = starCount;
 		this.releaseDate = releaseDate;
 		this.director = director;
 		this.actors = actors;
 		this.place = place;
-		this.with = with;
-		this.isLike = isLike;
+		this.withs = withs;
+		this.isLikeYn = isLikeYn;
+		this.starCount = starCount;
 	}
 
 
@@ -81,28 +81,28 @@ public class Movie extends Contents{
 	}
 
 
-	public String getWith() {
-		return with;
+	public String getWiths() {
+		return withs;
 	}
 
 
-	public void setWith(String with) {
-		this.with = with;
+	public void setWiths(String withs) {
+		this.withs = withs;
 	}
 
 
-	public boolean isLike() {
-		return isLike;
+	public String getIsLikeYn() {
+		return isLikeYn;
 	}
 
 
-	public void setLike(boolean isLike) {
-		this.isLike = isLike;
+	public void setIsLikeYn(String isLikeYn) {
+		this.isLikeYn = isLikeYn;
 	}
 
 
 	@Override
 	public String toString() {
-		return String.format("%d\t%s\t\t%s\t%s\t%s\t%s\t%d", getContentsId(), getCreateDate(), getTitle(), releaseDate, director, actors, starCount);
+		return String.format("%d\t%s\t%s\t%s\t%s\t%s\t%d", getContentsId(), getCreateDate(), getTitle(), releaseDate, director, actors, starCount);
 	}
 }

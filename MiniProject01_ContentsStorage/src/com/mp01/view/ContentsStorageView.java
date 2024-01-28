@@ -75,6 +75,7 @@ public class ContentsStorageView {
 			System.out.println("| |_| | | (_| | |  | |_| |");
 			System.out.println("|____/|_|\\__,_|_|   \\__, |");
 			System.out.println("                     |___/ ");
+			System.out.println();
 			System.out.println("*************************************");
 			
 			System.out.println("1.목록 보기");
@@ -120,6 +121,7 @@ public class ContentsStorageView {
 			System.out.println("| |\\/| |/ _ \\ \\ / / |/ _ \\");
 			System.out.println("| |  | | (_) \\ V /| |  __/");
 			System.out.println("|_|  |_|\\___/ \\_/ |_|\\___|");
+			System.out.println();
 			System.out.println("*************************************");
 			
 			System.out.println("1.목록 보기");
@@ -165,6 +167,7 @@ public class ContentsStorageView {
 			System.out.println("|  _ \\ / _ \\ / _ \\| |/ /");
 			System.out.println("| |_) | (_) | (_) |   < ");
 			System.out.println("|____/ \\___/ \\___/|_|\\_\\");
+			System.out.println();
 			System.out.println("*************************************");
 			
 			System.out.println("1.목록 보기");
@@ -260,12 +263,12 @@ public class ContentsStorageView {
 			String with = sc.nextLine();
 			
 			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
-			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			String isLikeYn = sc.nextLine().toLowerCase().substring(0,1);
 			
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			c = new Movie(contentsType, title, content, createDate, starCount, releaseDate, director, actors, place, with, isLike == 'y');
+			c = new Movie(contentsType, title, content, createDate, releaseDate, director, actors, place, with, isLikeYn, starCount);
 			
 		} else { // 책
 			System.out.print("작가를 입력해주세요. : ");
@@ -281,13 +284,15 @@ public class ContentsStorageView {
 			int starCount = Integer.parseInt(sc.nextLine());
 			
 			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
-			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			String isLikeYn = sc.nextLine().toLowerCase().substring(0,1);
 			
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			c = new Book(contentsType, title, content, createDate, starCount, author, publisher, price, isLike == 'y');
+			c = new Book(contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
+		
+		System.out.println("111111");
 		
 		if(csc.addContents(c)) {
 			System.out.println("컨텐츠가 생성 되었습니다.");
@@ -373,12 +378,12 @@ public class ContentsStorageView {
 			String with = sc.nextLine();
 			
 			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
-			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			String isLikeYn = sc.nextLine().toLowerCase().substring(0,1);
 			
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			Movie m = new Movie(contentsType, title, content, createDate, starCount, releaseDate, director, actors, place, with, isLike == 'y');
+			Movie m = new Movie(contentsType, title, content, createDate, releaseDate, director, actors, place, with, isLikeYn, starCount);
 			
 			result = csc.updateContents(contentsId, title, content, createDate, m);
 			
@@ -396,12 +401,12 @@ public class ContentsStorageView {
 			int starCount = Integer.parseInt(sc.nextLine());
 			
 			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
-			char isLike = sc.nextLine().toLowerCase().charAt(0);
+			String isLikeYn = sc.nextLine().toLowerCase().substring(0,1);
 			
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			Book b = new Book(contentsType, title, content, createDate, starCount, author, publisher, price, isLike == 'y');
+			Book b = new Book(contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 			
 			result = csc.updateContents(contentsId, title, content, createDate, b);
 		}
