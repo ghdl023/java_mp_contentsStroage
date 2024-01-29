@@ -18,9 +18,18 @@ public class Contents {
 		this.createDate = createDate;
 	}
 	
+	public Contents(int contentsId, String type, String title, String content, String createDate) {
+		this(type, title, content, createDate);
+		this.contentsId = contentsId;
+	}
+	
 
 	public int getContentsId() {
 		return contentsId;
+	}
+	
+	public void setContentsId(int contentsId) {
+		this.contentsId = contentsId;
 	}
 
 

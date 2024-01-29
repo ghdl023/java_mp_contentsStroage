@@ -24,6 +24,16 @@ public class Book extends Contents {
 		this.isLikeYn = isLikeYn;
 		this.starCount = starCount;
 	}
+	
+	public Book(int contentsId, String type, String title, String content, String createDate, String author, String publisher,
+			int price, String isLikeYn, int starCount) {
+		super(contentsId, type, title, content, createDate);
+		this.author = author;
+		this.publisher = publisher;
+		this.price = price;
+		this.isLikeYn = isLikeYn;
+		this.starCount = starCount;
+	}
 
 	public int getStarCount() {
 		return starCount;

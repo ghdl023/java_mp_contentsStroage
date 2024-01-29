@@ -66,7 +66,7 @@ public class JDBCModelDAO {
 				while(resultSet.next()) {
 					Contents c = null;
 					
-					String contentsId = resultSet.getString("id");
+					int contentsId = resultSet.getInt("id");
 //					int contentsTypeId = resultSet.getInt("contents_type_id");
 					String title = resultSet.getString("title");
 					String content = resultSet.getString("content");
@@ -74,7 +74,7 @@ public class JDBCModelDAO {
 					
 					if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
 						String feelings = resultSet.getString("feelings");
-						c = new Diary(contentsType, title, content, createDate, feelings);	
+						c = new Diary(contentsId, contentsType, title, content, createDate, feelings);	
 						
 					} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
 						String releaseDate = resultSet.getString("release_date");
@@ -84,7 +84,7 @@ public class JDBCModelDAO {
 						String withs = resultSet.getString("withs");
 						String isLikeYn = resultSet.getString("is_like_yn");
 						int starCount = resultSet.getInt("star_count");
-						c = new Movie(contentsType, title, content, createDate, releaseDate, director, actors, place, withs, isLikeYn, starCount);	
+						c = new Movie(contentsId, contentsType, title, content, createDate, releaseDate, director, actors, place, withs, isLikeYn, starCount);	
 						
 					} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
 						String author = resultSet.getString("author");
@@ -92,7 +92,7 @@ public class JDBCModelDAO {
 						int price = resultSet.getInt("price");
 						String isLikeYn = resultSet.getString("is_like_yn");
 						int starCount = resultSet.getInt("star_count");
-						c = new Book(contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);	
+						c = new Book(contentsId, contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);	
 						
 					} 
 					
@@ -214,5 +214,93 @@ public class JDBCModelDAO {
 		}
 		
 		return insertCount;
+	}
+	
+	public Contents getContents(int contentsId, String contentsType) {
+		try {
+			Class.forName(DRIVER_NAME);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		String sql = "";
+		
+		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
+			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS ";
+			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id ";
+			sql += "WHERE 1=1 ";
+			sql += "AND CONTENTS_TYPE_ID = 1 ";
+			
+		} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
+			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, M.RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT ";
+			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id ";
+			sql += "WHERE 1=1 ";
+			sql += "AND CONTENTS_TYPE_ID = 2 ";
+			
+		} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
+			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT ";
+			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id ";
+			sql += "WHERE 1=1 ";
+			sql += "AND CONTENTS_TYPE_ID = 3 ";
+		}
+		sql += "AND C.id = " + contentsId + " ";
+		sql += "AND USER_ID = '" + user.getUserId() + "'";
+		
+		
+		Contents c = null;
+		
+		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+			
+//			preparedStatement.setString(1, user.getUserId());
+			
+			try (ResultSet resultSet = preparedStatement.executeQuery()){
+				
+				while(resultSet.next()) {
+					c = null;
+					
+//					String contentsId = resultSet.getString("id");
+//					int contentsTypeId = resultSet.getInt("contents_type_id");
+					String title = resultSet.getString("title");
+					String content = resultSet.getString("content");
+					String createDate = resultSet.getString("create_date");
+					
+					if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
+						String feelings = resultSet.getString("feelings");
+						c = new Diary(contentsId, contentsType, title, content, createDate, feelings);	
+						
+					} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
+						String releaseDate = resultSet.getString("release_date");
+						String director = resultSet.getString("director");
+						String actors = resultSet.getString("actors");
+						String place = resultSet.getString("place");
+						String withs = resultSet.getString("withs");
+						String isLikeYn = resultSet.getString("is_like_yn");
+						int starCount = resultSet.getInt("star_count");
+						c = new Movie(contentsId, contentsType, title, content, createDate, releaseDate, director, actors, place, withs, isLikeYn, starCount);	
+						
+					} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
+						String author = resultSet.getString("author");
+						String publisher = resultSet.getString("publisher");
+						int price = resultSet.getInt("price");
+						String isLikeYn = resultSet.getString("is_like_yn");
+						int starCount = resultSet.getInt("star_count");
+						c = new Book(contentsId, contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);	
+						
+					} 
+				}
+			}  catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return c;
+	}
+	
+	public boolean deleteContents(int contentsId, String contentsType) {
+		return false;
 	}
 }

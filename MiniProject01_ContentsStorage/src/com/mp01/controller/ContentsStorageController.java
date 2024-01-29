@@ -18,17 +18,8 @@ public class ContentsStorageController {
 		return dbConnect.addContents(c) == 1;
 	}
 	
-	public Contents getContents(int contentsId) {
-		Contents targetContents = null;
-		List<Contents> list = user.getContentsList();
-		for(int i=0; i<list.size(); i++) {
-			Contents currentItem = list.get(i);
-			if(currentItem.getContentsId() == contentsId) {
-				targetContents = currentItem;
-				break;
-			}
-		}
-		return targetContents;
+	public Contents getContents(int contentsId, String contentsType) {
+		return dbConnect.getContents(contentsId, contentsType);
 	}
 	
 	public boolean updateContents(int contentsId, String title, String content, String createDate, Contents c) {

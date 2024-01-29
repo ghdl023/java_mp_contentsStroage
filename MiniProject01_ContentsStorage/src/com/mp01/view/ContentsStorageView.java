@@ -307,7 +307,7 @@ public class ContentsStorageView {
 		System.out.print("조회할 컨텐츠 NO을 입력하세요. : ");
 		int contentsId = Integer.parseInt(sc.nextLine());
 		
-		c = csc.getContents(contentsId);
+		c = csc.getContents(contentsId, contentsType);
 		
 		if(c != null) {
 			if(contentsType.equals(DIARY_TYPE)) { // 일기

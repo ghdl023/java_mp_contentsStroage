@@ -30,6 +30,18 @@ public class Movie extends Contents{
 		this.isLikeYn = isLikeYn;
 		this.starCount = starCount;
 	}
+	
+	public Movie(int contentsId, String type, String title, String content, String createDate, String releaseDate, String director,
+			String actors, String place, String withs, String isLikeYn, int starCount) {
+		super(contentsId, type, title, content, createDate);
+		this.releaseDate = releaseDate;
+		this.director = director;
+		this.actors = actors;
+		this.place = place;
+		this.withs = withs;
+		this.isLikeYn = isLikeYn;
+		this.starCount = starCount;
+	}
 
 
 	public int getStarCount() {

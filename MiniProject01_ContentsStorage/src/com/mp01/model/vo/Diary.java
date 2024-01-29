@@ -11,6 +11,11 @@ public class Diary extends Contents {
 		super(type, title, content,createDate);
 		this.feelings = feelings;
 	}
+	
+	public Diary(int contentsId, String type, String title, String content, String createDate, String feelings) {
+		super(contentsId, type, title, content,createDate);
+		this.feelings = feelings;
+	}
 
 	public String getFeelings() {
 		return feelings;
