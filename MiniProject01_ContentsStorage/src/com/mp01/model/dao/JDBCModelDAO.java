@@ -72,6 +72,8 @@ public class JDBCModelDAO {
 					String content = resultSet.getString("content");
 					String createDate = resultSet.getString("create_date");
 					
+					System.out.println("contentsId: " + contentsId);
+					
 					if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
 						String feelings = resultSet.getString("feelings");
 						c = new Diary(contentsId, contentsType, title, content, createDate, feelings);	
@@ -301,6 +303,35 @@ public class JDBCModelDAO {
 	}
 	
 	public boolean deleteContents(int contentsId, String contentsType) {
-		return false;
+		try {
+			Class.forName(DRIVER_NAME);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());
+			
+		
+		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
+			
+		} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
+			
+		} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
+		}
+		
+		
+		int deleteCount = 0;
+		
+		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+			
+			deleteCount = preparedStatement.executeUpdate();
+			System.out.println("deleteCount: " + deleteCount);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return deleteCount == 1;
 	}
 }

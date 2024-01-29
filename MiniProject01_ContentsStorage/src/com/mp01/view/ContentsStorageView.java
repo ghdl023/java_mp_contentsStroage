@@ -334,7 +334,7 @@ public class ContentsStorageView {
 		System.out.print("수정할 컨텐츠 NO을 입력하세요. : ");
 		int contentsId = Integer.parseInt(sc.nextLine());
 		
-		if(csc.getContents(contentsId) == null) {
+		if(csc.getContents(contentsId, contentsType) == null) {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
 			return;
 		}
@@ -422,7 +422,7 @@ public class ContentsStorageView {
 		System.out.print("삭제할 컨텐츠 NO을 입력하세요. : ");
 		int contentsId = Integer.parseInt(sc.nextLine());
 		
-		if(csc.deleteContents(contentsId)) {
+		if(csc.deleteContents(contentsId, contentsType)) {
 			System.out.println("컨텐츠가 삭제 되었습니다.");
 		} else {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");

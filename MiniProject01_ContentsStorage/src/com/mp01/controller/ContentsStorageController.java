@@ -74,30 +74,11 @@ public class ContentsStorageController {
 		return result;
 	}
 	
-	public boolean deleteContents(int contentsId) {
-		boolean result = false;
-		List<Contents> list = user.getContentsList();
-		for(int i=0; i<list.size(); i++) {
-			Contents currentItem = list.get(i);
-			if(currentItem.getContentsId() == contentsId) {
-				list.remove(i);
-				result = true;
-				break;
-			}
-		}
-		return result;
+	public boolean deleteContents(int contentsId, String contentsType) {
+		return dbConnect.deleteContents(contentsId, contentsType);
 	}
 	
 	public List<Contents> getContentsList(String contentsType) {
-//		List<Contents> filteredList = new ArrayList<>(); 
-//		List<Contents> list = user.getContentsList();
-//		for(int i=0; i<list.size(); i++) {
-//			Contents currentItem = list.get(i);
-//			if(currentItem.getType().equals(contentsType)) {
-//				filteredList.add(currentItem);
-//			}
-//		}
-//		return filteredList;
 		return dbConnect.getContentsList(contentsType);
 	}
 }
