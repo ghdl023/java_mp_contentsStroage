@@ -23,7 +23,7 @@ public class JDBCModelDAO {
 
 	private User user = UserController.user;
 	
-	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
+//	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver"; // DriverManager을 Connection Pool로 대체
 	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
 //	private final String DATABASE_URL = "jdbc:oracle:thin:@192.168.219.100:1521:xe";
 	private final String DATABASE_USER_ID = "kh";
@@ -44,22 +44,22 @@ public class JDBCModelDAO {
 		}
 	}
 	
-	public boolean checkDriverExits() { // 오라클 드라이버 클래스 체크
-		try {
-			Class.forName(DRIVER_NAME);
-			return true;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+//	public boolean checkDriverExits() { // 오라클 드라이버 클래스 체크
+//		try {
+//			Class.forName(DRIVER_NAME);
+//			return true;
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//			return false;
+//		}
+//	}
 	
 	public List<Contents> getContentsList(String contentsType) {
 		List<Contents> list = new ArrayList<>();
 		
-		if(!checkDriverExits()) { // 커넥션풀 사용시 
-			return list;
-		}
+//		if(!checkDriverExits()) { // DriverManager 사용시만 필요
+//			return list;
+//		}
 		
 		String sql = "";
 		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
@@ -140,9 +140,9 @@ public class JDBCModelDAO {
 	public int addContents(Contents c) {
 		int insertCount = 0;
 
-		if(!checkDriverExits()) {
-			return insertCount;
-		}
+//		if(!checkDriverExits()) {
+//			return insertCount;
+//		}
 		
 		
 		String sql = "INSERT INTO CONTENTS(id, title, content, create_date, contents_type_id, user_id) VALUES(SEQ_CTS.NEXTVAL, ?, ?, ?, ?, ?)";
@@ -243,9 +243,9 @@ public class JDBCModelDAO {
 	}
 	
 	public Contents getContents(int contentsId, String contentsType) {
-		if(!checkDriverExits()) {
-			return null;
-		}
+//		if(!checkDriverExits()) {
+//			return null;
+//		}
 		
 		String sql = "";
 		
@@ -322,9 +322,9 @@ public class JDBCModelDAO {
 	}
 	
 	public boolean updateContents(Contents c) {
-		if(!checkDriverExits()) {
-			return false;
-		}
+//		if(!checkDriverExits()) {
+//			return false;
+//		}
 		
 		int result = 0;
 		
@@ -425,9 +425,9 @@ public class JDBCModelDAO {
 	}
 	
 	public boolean deleteContents(int contentsId, String contentsType) {
-		if(!checkDriverExits()) {
-			return false;
-		}
+//		if(!checkDriverExits()) {
+//			return false;
+//		}
 		
 		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());		
 		int deleteCount = 0;
