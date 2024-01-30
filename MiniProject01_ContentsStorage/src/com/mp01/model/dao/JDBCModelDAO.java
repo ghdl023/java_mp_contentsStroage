@@ -97,7 +97,7 @@ public class JDBCModelDAO {
 					String content = resultSet.getString("content");
 					String createDate = resultSet.getString("create_date");
 					
-					System.out.println("contentsId: " + contentsId);
+//					System.out.println("contentsId: " + contentsId);
 					
 					if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
 						String feelings = resultSet.getString("feelings");
@@ -151,10 +151,10 @@ public class JDBCModelDAO {
 				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
 			
-			System.out.println(c.getTitle());
-			System.out.println(c.getContent());
-			System.out.println(c.getCreateDate());
-			System.out.println(user.getUserId());
+//			System.out.println(c.getTitle());
+//			System.out.println(c.getContent());
+//			System.out.println(c.getCreateDate());
+//			System.out.println(user.getUserId());
 
 			int contents_type_id = c instanceof Diary ? 1 : (c instanceof Movie ? 2 : 3);
 			
@@ -166,7 +166,7 @@ public class JDBCModelDAO {
 			
 			insertCount = preparedStatement.executeUpdate();
 			
-			System.out.println("insertCount: " + insertCount );
+//			System.out.println("insertCount: " + insertCount );
 			
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 			int generatedKey = 0;
@@ -175,7 +175,7 @@ public class JDBCModelDAO {
 			    generatedKey = rs.getInt(1);
 			}
 			 
-			System.out.println("Inserted record's ID: " + generatedKey);
+//			System.out.println("Inserted record's ID: " + generatedKey);
 			
 			if(c instanceof Diary) {
 				Diary d = (Diary)c;
@@ -186,7 +186,7 @@ public class JDBCModelDAO {
 					
 					insertCount = preparedStatement2.executeUpdate();
 					
-					System.out.println("insertCount: " + insertCount );
+//					System.out.println("insertCount: " + insertCount );
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -207,7 +207,7 @@ public class JDBCModelDAO {
 					
 					insertCount = preparedStatement2.executeUpdate();
 					
-					System.out.println("insertCount: " + insertCount );
+//					System.out.println("insertCount: " + insertCount );
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -226,7 +226,7 @@ public class JDBCModelDAO {
 					
 					insertCount = preparedStatement2.executeUpdate();
 					
-					System.out.println("insertCount: " + insertCount );
+//					System.out.println("insertCount: " + insertCount );
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -437,7 +437,7 @@ public class JDBCModelDAO {
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 			
 			deleteCount = preparedStatement.executeUpdate();
-			System.out.println("deleteCount: " + deleteCount);
+//			System.out.println("deleteCount: " + deleteCount);
 			
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -38,7 +38,14 @@ public class ContentsStorageView {
 		}
 		
 		while(true) {
-			System.out.println("===== 컨텐츠 선택 =====");
+			System.out.println("***********************************************");
+			System.out.println(" __  __                           _           ");
+			System.out.println("|  \\/  | ___ _ __ ___   ___  _ __(_) ___  ___ ");
+			System.out.println("| |\\/| |/ _ \\ '_ ` _ \\ / _ \\| '__| |/ _ \\/ __|");
+			System.out.println("| |  | |  __/ | | | | | (_) | |  | |  __/\\__ \\");
+			System.out.println("|_|  |_|\\___|_| |_| |_|\\___/|_|  |_|\\___||___/");
+			System.out.println();
+			System.out.println("***********************************************");
 			System.out.println("1.일기");
 			System.out.println("2.영화");
 			System.out.println("3.책");
