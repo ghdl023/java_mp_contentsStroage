@@ -209,11 +209,11 @@ public class ContentsStorageView {
 		List<Contents> list = csc.getContentsList(contentsType);
 		if(!list.isEmpty()) {
 			if(contentsType.equals(DIARY_TYPE)) { // 일기
-				System.out.println("NO\t작성일\t\t제목\t감정");
+				System.out.println("NO\t작성일\t\t제목\t\t\t감정");
 			} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
-				System.out.println("NO\t작성일\t\t제목\t개봉일\t감독\t출연배우\t별점");
+				System.out.println("NO\t작성일\t\t제목\t\t\t개봉일\t\t감독\t출연배우\t별점");
 			} else { // 책
-				System.out.println("NO\t작성일\t\t제목\t작가\t출판사\t가격\t별점");
+				System.out.println("NO\t작성일\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
 			}
 			for(Contents c : list) {
 				System.out.println(c);
@@ -311,13 +311,13 @@ public class ContentsStorageView {
 		
 		if(c != null) {
 			if(contentsType.equals(DIARY_TYPE)) { // 일기
-				System.out.println("NO\t날짜\t\t제목\t감정");
+				System.out.println("NO\t날짜\t\t제목\t\t\t감정");
 				System.out.println(c);
 			} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
-				System.out.println("NO\t날짜\t\t제목\t개봉일\t감독\t출연배우\t별점");
+				System.out.println("NO\t날짜\t\t제목\t\t\t개봉일\t\t감독\t출연배우\t별점");
 				System.out.println(c);
 			} else { // 책
-				System.out.println("NO\t날짜\t\t제목\t작가\t출판사\t가격\t별점");
+				System.out.println("NO\t날짜\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
 				System.out.println(c);
 			}
 			System.out.println("내용:");
@@ -347,6 +347,8 @@ public class ContentsStorageView {
 		
 		String content = "";
 		
+		Contents c = null;
+		
 		if(contentsType.equals(DIARY_TYPE)) { // 일기
 			System.out.print("오늘을 감정으로 표현한다면 어떤 감정일까요?(기쁨,행복,슬픔,우울 등) : ");
 			String feelings = sc.nextLine();
@@ -354,9 +356,7 @@ public class ContentsStorageView {
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			Diary d = new Diary(feelings);
-			
-			result = csc.updateContents(contentsId, title, content, createDate, d);
+			c = new Diary(contentsId, contentsType, title, content, createDate, feelings);
 			
 		} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
 			System.out.print("개봉일을 입력해주세요. : ");
@@ -368,7 +368,7 @@ public class ContentsStorageView {
 			System.out.print("출연배우들을 입력해주세요.(,로 구분) : ");
 			String actors = sc.nextLine();
 			
-			System.out.print("별점을 입력해주세요.(1~5)");
+			System.out.print("별점을 입력해주세요.(1~5) : ");
 			int starCount = Integer.parseInt(sc.nextLine());
 			
 			System.out.print("영화를 어디서 보셨나요? : ");
@@ -383,9 +383,7 @@ public class ContentsStorageView {
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			Movie m = new Movie(contentsType, title, content, createDate, releaseDate, director, actors, place, with, isLikeYn, starCount);
-			
-			result = csc.updateContents(contentsId, title, content, createDate, m);
+			c = new Movie(contentsId, contentsType, title, content, createDate, releaseDate, director, actors, place, with, isLikeYn, starCount);
 			
 		} else { // 책
 			System.out.print("작가를 입력해주세요. : ");
@@ -397,7 +395,7 @@ public class ContentsStorageView {
 			System.out.print("가격을 입력해주세요. : ");
 			int price = Integer.parseInt(sc.nextLine());
 			
-			System.out.print("별점을 입력해주세요.(1~5)");
+			System.out.print("별점을 입력해주세요.(1~5) : ");
 			int starCount = Integer.parseInt(sc.nextLine());
 			
 			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
@@ -406,10 +404,10 @@ public class ContentsStorageView {
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			Book b = new Book(contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
-			
-			result = csc.updateContents(contentsId, title, content, createDate, b);
+			c = new Book(contentsId, contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
+		
+		result = csc.updateContents(c);
 		
 		if(result) {
 			System.out.println("컨텐츠가 수정 되었습니다.");

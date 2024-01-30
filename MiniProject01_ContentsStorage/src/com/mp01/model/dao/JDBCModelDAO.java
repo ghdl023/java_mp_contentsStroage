@@ -20,8 +20,8 @@ public class JDBCModelDAO {
 	private User user = UserController.user;
 	
 	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
-//	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
-	private final String DATABASE_URL = "jdbc:oracle:thin:@192.168.219.100:1521:xe";
+	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
+//	private final String DATABASE_URL = "jdbc:oracle:thin:@192.168.219.100:1521:xe";
 	private final String DATABASE_USER_ID = "kh";
 	private final String DATABASE_USER_PW = "kh";
 	
@@ -35,19 +35,19 @@ public class JDBCModelDAO {
 		}
 		
 		String sql = "";
-		if(contentsType.equals("diary")) {
+		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
 			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS ";
 			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id ";
 			sql += "WHERE 1=1 ";
 			sql += "AND CONTENTS_TYPE_ID = 1";
 			
-		} else if(contentsType.equals("movie")) {
-			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, M.RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT ";
+		} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
+			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, TO_CHAR(M.RELEASE_DATE, 'YYYY-MM-DD') RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT ";
 			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id ";
 			sql += "WHERE 1=1 ";
 			sql += "AND CONTENTS_TYPE_ID = 2";
 			
-		} else if(contentsType.equals("book")) {
+		} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
 			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT ";
 			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id ";
 			sql += "WHERE 1=1 ";
@@ -302,6 +302,110 @@ public class JDBCModelDAO {
 		return c;
 	}
 	
+	public boolean updateContents(Contents c) {
+		try {
+			Class.forName(DRIVER_NAME);
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		int result = 0;
+		
+		String contentsType = c.getType();
+		String sql = "UPDATE CONTENTS SET TITLE=?, CONTENT=?, CREATE_DATE=? WHERE ID=?";
+		
+		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+			
+			preparedStatement.setString(1, c.getTitle());
+			preparedStatement.setString(2, c.getContent());
+			preparedStatement.setString(3, c.getCreateDate());
+			preparedStatement.setInt(4, c.getContentsId());
+			
+			result = preparedStatement.executeUpdate();
+		
+			if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
+				sql = "UPDATE CONTENTS_DIARY "
+						+ "SET FEELINGS=? "
+						+ "WHERE 1=1 "
+						+ "AND CONTENTS_ID=?";
+				
+				try(PreparedStatement preparedStatement2 = connection.prepareStatement(sql)) {
+					Diary d = (Diary) c;
+					preparedStatement2.setString(1, d.getFeelings());
+					preparedStatement2.setInt(2, d.getContentsId());
+					
+					result = preparedStatement2.executeUpdate();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				
+				
+			} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
+				sql = "UPDATE CONTENTS_MOVIE "
+						+ "SET RELEASE_DATE=?, "
+						+ "DIRECTOR=?, "
+						+ "ACTORS=?, "
+						+ "PLACE=?, "
+						+ "WITHS=?, "
+						+ "IS_LIKE_YN=?, "
+						+ "STAR_COUNT=? "
+						+ "WHERE 1=1 "
+						+ "AND CONTENTS_ID=?";
+				
+				try(PreparedStatement preparedStatement2 = connection.prepareStatement(sql)) { 
+					Movie m = (Movie)c;
+					preparedStatement2.setString(1, m.getReleaseDate());
+					preparedStatement2.setString(2, m.getDirector());
+					preparedStatement2.setString(3, m.getActors());
+					preparedStatement2.setString(4, m.getPlace());
+					preparedStatement2.setString(5, m.getWiths());
+					preparedStatement2.setString(6, m.getIsLikeYn());
+					preparedStatement2.setInt(7, m.getStarCount());
+					preparedStatement2.setInt(8, m.getContentsId());
+					
+					result = preparedStatement2.executeUpdate();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+				
+			} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
+				sql = "UPDATE CONTENTS_BOOK "
+						+ "SET AUTHOR=?, "
+						+ "PUBLISHER=?, "
+						+ "PRICE=?, "
+						+ "IS_LIKE_YN=? "
+						+ "STAR_COUNT=? "
+						+ "WHERE 1=1 "
+						+ "AND CONTENTS_ID=?";
+				
+				try(PreparedStatement preparedStatement2 = connection.prepareStatement(sql)) {
+					Book b = (Book)c;
+					preparedStatement2.setString(1, b.getAuthor());
+					preparedStatement2.setString(2, b.getPublisher());
+					preparedStatement2.setInt(3, b.getPrice());
+					preparedStatement2.setString(4, b.getIsLikeYn());
+					preparedStatement2.setInt(5, b.getStarCount());
+					preparedStatement2.setInt(6, b.getContentsId());
+					
+					result = preparedStatement2.executeUpdate();
+					
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+					
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		
+		return result == 1;
+	}
+	
 	public boolean deleteContents(int contentsId, String contentsType) {
 		try {
 			Class.forName(DRIVER_NAME);
@@ -309,17 +413,7 @@ public class JDBCModelDAO {
 			e.printStackTrace();
 		}
 		
-		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());
-			
-		
-		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
-			
-		} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
-			
-		} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
-		}
-		
-		
+		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());		
 		int deleteCount = 0;
 		
 		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
