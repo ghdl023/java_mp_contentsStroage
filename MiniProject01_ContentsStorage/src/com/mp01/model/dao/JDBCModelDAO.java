@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.PooledConnection;
+
 import com.mp01.controller.UserController;
 import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
@@ -14,6 +16,8 @@ import com.mp01.model.vo.Diary;
 import com.mp01.model.vo.Movie;
 import com.mp01.model.vo.User;
 import com.mp01.view.ContentsStorageView;
+
+import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
 public class JDBCModelDAO {
 
@@ -25,13 +29,36 @@ public class JDBCModelDAO {
 	private final String DATABASE_USER_ID = "kh";
 	private final String DATABASE_USER_PW = "kh";
 	
+	PooledConnection pc;
+	
+	{
+		try {
+			OracleConnectionPoolDataSource ocpds = new OracleConnectionPoolDataSource(); 
+			ocpds.setURL(DATABASE_URL);
+			ocpds.setUser(DATABASE_USER_ID);
+			ocpds.setPassword(DATABASE_USER_PW);
+			
+			pc = ocpds.getPooledConnection();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean checkDriverExits() { // 오라클 드라이버 클래스 체크
+		try {
+			Class.forName(DRIVER_NAME);
+			return true;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public List<Contents> getContentsList(String contentsType) {
 		List<Contents> list = new ArrayList<>();
 		
-		try {
-			Class.forName(DRIVER_NAME);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		if(!checkDriverExits()) { // 커넥션풀 사용시 
+			return list;
 		}
 		
 		String sql = "";
@@ -56,10 +83,9 @@ public class JDBCModelDAO {
 		sql += "AND USER_ID = '" + user.getUserId() + "'";
 		
 		
-		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
+				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-			
-//			preparedStatement.setString(1, user.getUserId());
 			
 			try (ResultSet resultSet = preparedStatement.executeQuery()){
 				
@@ -67,7 +93,6 @@ public class JDBCModelDAO {
 					Contents c = null;
 					
 					int contentsId = resultSet.getInt("id");
-//					int contentsTypeId = resultSet.getInt("contents_type_id");
 					String title = resultSet.getString("title");
 					String content = resultSet.getString("content");
 					String createDate = resultSet.getString("create_date");
@@ -115,16 +140,15 @@ public class JDBCModelDAO {
 	public int addContents(Contents c) {
 		int insertCount = 0;
 
-		try {
-			Class.forName(DRIVER_NAME);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		if(!checkDriverExits()) {
+			return insertCount;
 		}
 		
 		
 		String sql = "INSERT INTO CONTENTS(id, title, content, create_date, contents_type_id, user_id) VALUES(SEQ_CTS.NEXTVAL, ?, ?, ?, ?, ?)";
 
-		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
+				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
 			
 			System.out.println(c.getTitle());
@@ -219,10 +243,8 @@ public class JDBCModelDAO {
 	}
 	
 	public Contents getContents(int contentsId, String contentsType) {
-		try {
-			Class.forName(DRIVER_NAME);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		if(!checkDriverExits()) {
+			return null;
 		}
 		
 		String sql = "";
@@ -251,18 +273,15 @@ public class JDBCModelDAO {
 		
 		Contents c = null;
 		
-		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
+				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-			
-//			preparedStatement.setString(1, user.getUserId());
 			
 			try (ResultSet resultSet = preparedStatement.executeQuery()){
 				
 				while(resultSet.next()) {
 					c = null;
 					
-//					String contentsId = resultSet.getString("id");
-//					int contentsTypeId = resultSet.getInt("contents_type_id");
 					String title = resultSet.getString("title");
 					String content = resultSet.getString("content");
 					String createDate = resultSet.getString("create_date");
@@ -303,10 +322,8 @@ public class JDBCModelDAO {
 	}
 	
 	public boolean updateContents(Contents c) {
-		try {
-			Class.forName(DRIVER_NAME);
-		} catch(ClassNotFoundException e) {
-			e.printStackTrace();
+		if(!checkDriverExits()) {
+			return false;
 		}
 		
 		int result = 0;
@@ -314,7 +331,8 @@ public class JDBCModelDAO {
 		String contentsType = c.getType();
 		String sql = "UPDATE CONTENTS SET TITLE=?, CONTENT=?, CREATE_DATE=? WHERE ID=?";
 		
-		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
+				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			
 			preparedStatement.setString(1, c.getTitle());
@@ -407,16 +425,15 @@ public class JDBCModelDAO {
 	}
 	
 	public boolean deleteContents(int contentsId, String contentsType) {
-		try {
-			Class.forName(DRIVER_NAME);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		if(!checkDriverExits()) {
+			return false;
 		}
 		
 		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());		
 		int deleteCount = 0;
 		
-		try (Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW);
+		try ( // Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
+				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 			
 			deleteCount = preparedStatement.executeUpdate();
