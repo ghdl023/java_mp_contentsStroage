@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.mp01.controller.ContentsStorageController;
 import com.mp01.controller.UserController;
+import com.mp01.model.dao.JDBCModelDAO;
 import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
 import com.mp01.model.vo.Diary;
@@ -21,22 +22,6 @@ public class ContentsStorageView {
 	public static final String DIARY_TYPE = "diary";
 	
 	public void mainMenu() {
-		User user = UserController.user;
-		if(!user.isLogin()) {
-			System.out.println("===== LOGIN =====");
-			
-			while(true) {
-				System.out.print("id: " );
-				String userId = sc.nextLine();
-				
-				System.out.print("password: ");
-				String userPassword = sc.nextLine();
-				if(uc.signIn(userId, userPassword)) {
-					break;
-				}
-			}
-		}
-		
 		while(true) {
 			System.out.println("***********************************************");
 			System.out.println(" __  __                           _           ");
@@ -46,9 +31,108 @@ public class ContentsStorageView {
 			System.out.println("|_|  |_|\\___|_| |_| |_|\\___/|_|  |_|\\___||___/");
 			System.out.println();
 			System.out.println("***********************************************");
+
+			System.out.println("1.로그인");
+			System.out.println("2.회원가입");
+			System.out.println("3.프로그램 종료");
+
+			System.out.print("메뉴 선택 : ");
+
+			int selMenu = Integer.parseInt(sc.nextLine());
+
+			switch(selMenu) {
+				case 1: 
+					if(signInMenu()) {
+						homeMenu();
+					}
+					break;
+				case 2:
+					if(signUpMenu()) {
+						homeMenu();
+					}
+					break;
+				case 3: 
+					System.out.println("프로그램을 종료합니다.");
+					System.exit(0);
+				default:
+					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			}
+		}
+	}
+	
+	public boolean signInMenu() {
+		boolean result = false;
+				
+		while(true) {
+			System.out.println("***********************************************");
+			System.out.println(" _     ___   ____ ___ _   _ ");
+			System.out.println("| |   / _ \\ / ___|_ _| \\ | |");
+			System.out.println("| |  | | | | |  _ | ||  \\| |");
+			System.out.println("| |__| |_| | |_| || || |\\  |");
+			System.out.println("| |__| |_| | |_| || || |\\  |");
+			System.out.println("|_____\\___/ \\____|___|_| \\_|");
+			System.out.println();
+			System.out.println("***********************************************");
+			
+			System.out.print("아이디: " );
+			String userId = sc.nextLine();
+	
+			System.out.print("비밀번호: ");
+			String userPassword = sc.nextLine();
+			
+			result = uc.signIn(userId, userPassword);
+			
+			if(result) {
+				System.out.println(userId + "님 어서오세요!");
+				break;
+			} else {
+				System.out.println("로그인을 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
+			}
+		}
+		
+		return result;
+
+	}
+	
+	public boolean signUpMenu() {
+		boolean result = false;
+		
+		while(true) {
+			System.out.print("아이디: " );
+			String userId = sc.nextLine();
+	
+			System.out.print("비밀번호: ");
+			String userPassword = sc.nextLine();
+			
+			result = uc.signUp(userId, userPassword);
+			
+			if(result) {
+				System.out.println(userId + "님 어서오세요!");
+				break;
+			} else {
+				System.out.println("회원가입을 실패하였습니다. 중복된 아이디입니다.");
+			}
+		}
+		
+		return result;
+	}
+	
+	public void homeMenu() {
+
+		while(true) {
+			System.out.println("***********************************************");
+			System.out.println(" _   _  ___  __  __ _____ ");
+			System.out.println("| | | |/ _ \\|  \\/  | ____|");
+			System.out.println("| |_| | | | | |\\/| |  _|  ");
+			System.out.println("|  _  | |_| | |  | | |___ ");
+			System.out.println("|_| |_|\\___/|_|  |_|_____|");
+			System.out.println();
+			System.out.println("***********************************************");
+			
 			System.out.println("1.일기");
 			System.out.println("2.영화");
 			System.out.println("3.책");
+			System.out.println("9.로그아웃");
 			
 			System.out.print("메뉴 선택 : ");
 			int selMenu = Integer.parseInt(sc.nextLine());
@@ -64,13 +148,13 @@ public class ContentsStorageView {
 					bookMenu();
 					break;
 				case 9: 
-					System.out.println("프로그램을 종료합니다.");
-					break;
+					uc.signOut();
+					System.out.println("로그아웃 되었습니다.");
+					return;
 				default:
 					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
 		}
-		
 	}
 	
 	public void diaryMenu() {

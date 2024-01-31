@@ -53,6 +53,55 @@ public class JDBCModelDAO {
 //			return false;
 //		}
 //	}
+
+	
+	public boolean signUp(String id, String password) {
+		String sql = "INSERT INTO CONTENTS_USER(USER_NAME, USER_PWD) VALUES(?, ?)";
+		
+		int result = 0;
+		try (Connection connection = pc.getConnection();
+				PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			
+				pstmt.setString(1, id);
+				pstmt.setString(2, password);
+				
+				result = pstmt.executeUpdate();
+				
+				if(result == 1) { // 유저정보가 있으면 로그인
+					user.setUserId(id);
+					user.setUserPassword(password);
+				}
+				
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result == 1;
+	}
+	
+	public boolean signIn(String id, String password) {
+		String sql = "SELECT * FROM CONTENTS_USER WHERE 1=1 AND USER_NAME = ? AND USER_PWD = ? ";
+		
+		int result = 0;
+		try (Connection connection = pc.getConnection();
+				PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			
+				pstmt.setString(1, id);
+				pstmt.setString(2, password);
+				
+				result = pstmt.executeUpdate();
+				
+				if(result == 1) { // 유저정보가 있으면 로그인
+					user.setUserId(id);
+					user.setUserPassword(password);
+				}
+				
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result == 1;
+	}
 	
 	public List<Contents> getContentsList(String contentsType) {
 		List<Contents> list = new ArrayList<>();
