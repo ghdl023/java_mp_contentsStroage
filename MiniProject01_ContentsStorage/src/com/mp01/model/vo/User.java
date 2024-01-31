@@ -9,7 +9,10 @@ public class User {
 	private boolean isLogin;
 	private List<Contents> contentsList = new ArrayList<Contents>();
 	
-	public User() {
+	private static User instance = new User();
+	
+	private User() {
+	
 	}
 	
 	public User(String userId, String userPassword) {
@@ -44,6 +47,10 @@ public class User {
 
 	public void setContentsList(List<Contents> contentsList) {
 		this.contentsList = contentsList;
+	}
+	
+	public static User getInstance() {
+		return instance;
 	}
 	
 	@Override

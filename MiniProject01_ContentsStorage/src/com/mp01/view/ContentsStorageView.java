@@ -5,12 +5,10 @@ import java.util.Scanner;
 
 import com.mp01.controller.ContentsStorageController;
 import com.mp01.controller.UserController;
-import com.mp01.model.dao.JDBCModelDAO;
 import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
 import com.mp01.model.vo.Diary;
 import com.mp01.model.vo.Movie;
-import com.mp01.model.vo.User;
 
 public class ContentsStorageView {
 	private UserController uc = new UserController();

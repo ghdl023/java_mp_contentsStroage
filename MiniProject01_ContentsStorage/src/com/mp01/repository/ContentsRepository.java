@@ -19,7 +19,7 @@ import com.mp01.view.ContentsStorageView;
 import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
 public class ContentsRepository {
-	private User user = UserController.user;
+	private User user = User.getInstance();
 
 	//	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver"; // DriverManager을 Connection Pool로 대체
 	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";

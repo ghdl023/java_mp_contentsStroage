@@ -5,8 +5,6 @@ import com.mp01.service.UserService;
 
 public class UserController {
 	
-	public static User user = new User();
-	
 //	private JDBCModelDAO service = new JDBCModelDAO();
 	private UserService userService = new UserService();
 	
