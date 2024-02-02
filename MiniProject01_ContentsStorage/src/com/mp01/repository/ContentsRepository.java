@@ -150,9 +150,9 @@ public class ContentsRepository {
 				PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
 
 			// Auto Commit off setting
-			connection.setAutoCommit(false); // 또는 Run Configuration > Arguments > VM 에 다음 명령어 "-Doracle.jdbc.어쩌고저쩌고"
-			
+			connection.setAutoCommit(false); // 또는 Run Configuration > Arguments > VM 에 다음 명령어 "-Doracle.jdbc.autoCommitSpecCompliant=false"
 			Savepoint sp = connection.setSavepoint();
+			
 			//			System.out.println(c.getTitle());
 			//			System.out.println(c.getContent());
 			//			System.out.println(c.getCreateDate());
@@ -187,7 +187,6 @@ public class ContentsRepository {
 					preparedStatement2.setString(2, d.getFeelings());
 
 					insertCount = preparedStatement2.executeUpdate();
-					insertCount = 0;
 					//					System.out.println("insertCount: " + insertCount );
 
 				} catch (Exception e) {
