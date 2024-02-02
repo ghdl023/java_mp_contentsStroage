@@ -1,5 +1,6 @@
 package com.mp01.view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,6 +19,8 @@ public class ContentsStorageView {
 	public static final String BOOK_TYPE = "book";
 	public static final String MOVIE_TYPE = "movie";
 	public static final String DIARY_TYPE = "diary";
+	
+	List<Contents> list = new ArrayList<>();
 	
 	public void mainMenu() {
 		while(true) {
@@ -325,7 +328,7 @@ public class ContentsStorageView {
 	}
 	
 	public void getContentsList(String contentsType) {
-		List<Contents> list = csc.getContentsList(contentsType);
+		list = csc.getContentsList(contentsType);
 		if(!list.isEmpty()) {
 			if(contentsType.equals(DIARY_TYPE)) { // 일기
 				System.out.println("NO\t작성일\t\t제목\t\t\t감정");
@@ -334,8 +337,10 @@ public class ContentsStorageView {
 			} else { // 책
 				System.out.println("NO\t작성일\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
 			}
-			for(Contents c : list) {
-				System.out.println(c);
+			
+			for(int i=0; i<list.size(); i++) {
+				Contents c = list.get(i);
+				System.out.println((i+1) + "\t" + c);
 			}
 		} else {
 			System.out.println("조회된 결과가 없습니다. 새 컨텐츠를 생성하여 주세요.");
@@ -411,34 +416,33 @@ public class ContentsStorageView {
 			c = new Book(contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
 		
-		System.out.println("111111");
-		
 		if(csc.addContents(c)) {
 			System.out.println("컨텐츠가 생성 되었습니다.");
+			list = csc.getContentsList(contentsType); // 목록 재조회
 		} else {
 			System.out.println("컨텐츠 생성을 실패하였습니다.");
 		}
 	}
 	
 	public void getContents(String contentsType) {
-		Contents c = null;
-		
 		System.out.print("조회할 컨텐츠 NO을 입력하세요. : ");
-		int contentsId = Integer.parseInt(sc.nextLine());
+		int rowNum = Integer.parseInt(sc.nextLine());
+		int contentsId = 0;
+		if(rowNum <= list.size()) {
+			contentsId = list.get(rowNum-1).getContentsId();
+		}
 		
-		c = csc.getContents(contentsId, contentsType);
-		
-		if(c != null) {
+		if(contentsId > 0) {
+			Contents c = csc.getContents(contentsId, contentsType);
+			
 			if(contentsType.equals(DIARY_TYPE)) { // 일기
 				System.out.println("NO\t날짜\t\t제목\t\t\t감정");
-				System.out.println(c);
 			} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
 				System.out.println("NO\t날짜\t\t제목\t\t\t개봉일\t\t감독\t출연배우\t별점");
-				System.out.println(c);
 			} else { // 책
 				System.out.println("NO\t날짜\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
-				System.out.println(c);
 			}
+			System.out.println(rowNum + "\t" + c);
 			System.out.println("내용:");
 			System.out.println(c.getContent());
 			
@@ -451,9 +455,13 @@ public class ContentsStorageView {
 		boolean result = false;
 		
 		System.out.print("수정할 컨텐츠 NO을 입력하세요. : ");
-		int contentsId = Integer.parseInt(sc.nextLine());
+		int rowNum = Integer.parseInt(sc.nextLine());
+		int contentsId = 0;
+		if(rowNum <= list.size()) {
+			contentsId = list.get(rowNum-1).getContentsId();
+		}
 		
-		if(csc.getContents(contentsId, contentsType) == null) {
+		if(contentsId == 0 || csc.getContents(contentsId, contentsType) == null) {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
 			return;
 		}
@@ -530,6 +538,7 @@ public class ContentsStorageView {
 		
 		if(result) {
 			System.out.println("컨텐츠가 수정 되었습니다.");
+			list = csc.getContentsList(contentsType);
 		} else {
 			System.out.println("컨텐츠 수정을 실패하였습니다.");
 		}
@@ -537,10 +546,15 @@ public class ContentsStorageView {
 	
 	public void deleteContents(String contentsType) {
 		System.out.print("삭제할 컨텐츠 NO을 입력하세요. : ");
-		int contentsId = Integer.parseInt(sc.nextLine());
+		int rowNum = Integer.parseInt(sc.nextLine());
+		int contentsId = 0;
+		if(rowNum <= list.size()) {
+			contentsId = list.get(rowNum-1).getContentsId();
+		}
 		
-		if(csc.deleteContents(contentsId, contentsType)) {
+		if(contentsId > 0 && csc.deleteContents(contentsId, contentsType)) {
 			System.out.println("컨텐츠가 삭제 되었습니다.");
+			list = csc.getContentsList(contentsType);
 		} else {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
 		}

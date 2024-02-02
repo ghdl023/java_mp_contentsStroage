@@ -115,6 +115,6 @@ public class Movie extends Contents{
 
 	@Override
 	public String toString() {
-		return String.format("%d\t%s\t%s\t\t\t%s\t%s\t%s\t%d", getContentsId(), getCreateDate(), getTitle(), releaseDate, director, actors, starCount);
+		return String.format("%s\t%s\t\t\t%s\t%s\t%s\t%d", getCreateDate(), getTitle(), releaseDate, director, actors, starCount);
 	}
 }

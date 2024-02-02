@@ -27,7 +27,7 @@ public class Diary extends Contents {
 
 	@Override
 	public String toString() {
-		return String.format("%d\t%s\t%s\t\t\t%s", getContentsId(), getCreateDate(), getTitle(), feelings);
+		return String.format("%s\t%s\t\t\t%s", getCreateDate(), getTitle(), feelings);
 	}
 	
 	

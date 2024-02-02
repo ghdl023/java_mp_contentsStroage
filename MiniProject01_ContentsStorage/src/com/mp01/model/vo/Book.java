@@ -82,7 +82,7 @@ public class Book extends Contents {
 
 	@Override
 	public String toString() {
-		return String.format("%d\t%s\t%s\t\t\t%s\t\t%s\t\t%d\t%d", getContentsId(), getCreateDate(), getTitle(), author, publisher, price, starCount);
+		return String.format("%s\t%s\t\t%s\t\t%s\t\t%d\t%d", getCreateDate(), getTitle(), author, publisher, price, starCount);
 	}
 	
 	
