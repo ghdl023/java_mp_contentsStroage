@@ -3,12 +3,12 @@ package com.mp01.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.PooledConnection;
 
-import com.mp01.controller.UserController;
 import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
 import com.mp01.model.vo.Diary;
@@ -149,6 +149,10 @@ public class ContentsRepository {
 				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
 
+			// Auto Commit off setting
+			connection.setAutoCommit(false); // 또는 Run Configuration > Arguments > VM 에 다음 명령어 "-Doracle.jdbc.어쩌고저쩌고"
+			
+			Savepoint sp = connection.setSavepoint();
 			//			System.out.println(c.getTitle());
 			//			System.out.println(c.getContent());
 			//			System.out.println(c.getCreateDate());
@@ -163,7 +167,7 @@ public class ContentsRepository {
 			preparedStatement.setString(5, user.getUserId());
 
 			insertCount = preparedStatement.executeUpdate();
-
+			
 			//			System.out.println("insertCount: " + insertCount );
 
 			ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -183,7 +187,7 @@ public class ContentsRepository {
 					preparedStatement2.setString(2, d.getFeelings());
 
 					insertCount = preparedStatement2.executeUpdate();
-
+					insertCount = 0;
 					//					System.out.println("insertCount: " + insertCount );
 
 				} catch (Exception e) {
@@ -230,8 +234,12 @@ public class ContentsRepository {
 					e.printStackTrace();
 				}
 			} 
-
-
+			
+			if(insertCount > 0) { // commit
+				connection.commit();
+			} else { // rollback
+				connection.rollback(sp);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -332,6 +340,10 @@ public class ContentsRepository {
 		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
 				Connection connection = pc.getConnection(); // 커넥션풀 사용 
 				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+			
+			// Auto Commit off setting
+			connection.setAutoCommit(false);
+			Savepoint sp = connection.setSavepoint();
 
 			preparedStatement.setString(1, c.getTitle());
 			preparedStatement.setString(2, c.getContent());
@@ -410,6 +422,13 @@ public class ContentsRepository {
 					e.printStackTrace();
 				}
 			}
+			
+			if(result > 0) { // commit
+				connection.commit();
+			} else { // rollback
+				connection.rollback(sp);
+			}
+
 
 
 
