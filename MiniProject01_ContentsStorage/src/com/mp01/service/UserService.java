@@ -22,4 +22,8 @@ public class UserService {
 			user.setUserPassword("");
 		}
 	} 
+	
+	public boolean deleteUser() {
+		return userRepository.deleteUser();
+	}
 }

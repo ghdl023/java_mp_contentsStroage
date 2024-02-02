@@ -2,6 +2,7 @@ package com.mp01.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.sql.PooledConnection;
 
@@ -59,7 +60,7 @@ public class UserRepository {
 	}
 
 	public boolean signIn(String id, String password) {
-		String sql = "SELECT * FROM CONTENTS_USER WHERE 1=1 AND USER_NAME = ? AND USER_PWD = ? ";
+		String sql = "SELECT * FROM CONTENTS_USER WHERE 1=1 AND USER_NAME = ? AND USER_PWD = ? AND ENT_YN != 'Y' ";
 
 		int result = 0;
 		try (Connection connection = pc.getConnection();
@@ -79,6 +80,29 @@ public class UserRepository {
 			e.printStackTrace();
 		}
 
+		return result == 1;
+	}
+	
+	public boolean deleteUser() {
+		String sql = "UPDATE CONTENTS_USER SET ENT_YN = 'Y', ENT_DATE = SYSDATE WHERE 1=1 AND USER_NAME = ?";
+		
+		int result = 0;
+		try(Connection connection = pc.getConnection();
+				PreparedStatement pstmt = connection.prepareStatement(sql)){
+			
+			pstmt.setString(1, user.getUserId());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result == 1) {
+				user.setUserId("");
+				user.setUserPassword("");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return result == 1;
 	}
 }

@@ -130,6 +130,7 @@ public class ContentsStorageView {
 			System.out.println("1.일기");
 			System.out.println("2.영화");
 			System.out.println("3.책");
+			System.out.println("4.마이페이지");
 			System.out.println("9.로그아웃");
 			
 			System.out.print("메뉴 선택 : ");
@@ -144,6 +145,12 @@ public class ContentsStorageView {
 					break;
 				case 3:
 					bookMenu();
+					break;
+				case 4:
+					boolean isDeleted = myPageMenu();
+					if(isDeleted) {
+						return;
+					}
 					break;
 				case 9: 
 					uc.signOut();
@@ -292,6 +299,29 @@ public class ContentsStorageView {
 			}
 		}
 		
+	}
+	
+	public boolean myPageMenu() {
+		while(true) {
+			System.out.println("1.회원탈퇴");
+			System.out.println("9.홈으로 돌아가기");
+			System.out.print("메뉴 선택 : ");
+			
+			int selMenu = Integer.parseInt(sc.nextLine());
+			switch(selMenu) {
+				case 1:
+					if(deleteUser()) { // 삭제완료시
+						System.out.println("회원 탈퇴가 완료되었습니다. 메인화면으로 이동합니다.");
+						return true;
+					}
+					break;
+				case 9: 
+					System.out.println("홈으로 돌아가기");
+					return false;
+				default:
+					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			}
+		}
 	}
 	
 	public void getContentsList(String contentsType) {
@@ -513,6 +543,17 @@ public class ContentsStorageView {
 			System.out.println("컨텐츠가 삭제 되었습니다.");
 		} else {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
+		}
+	}
+	
+	public boolean deleteUser() {
+		System.out.println("정말 삭제하려면 '탈퇴'를, 뒤로가려면 아무거나 입력해주세요.");
+		String userInput = sc.nextLine();
+		
+		if(userInput.equals("탈퇴")) {
+			return uc.deleteUser();
+		} else {
+			return false;
 		}
 	}
 }

@@ -19,4 +19,8 @@ public class UserController {
 	public void signOut() {
 		userService.signOut();
 	}
+	
+	public boolean deleteUser() {
+		return userService.deleteUser();
+	}
 }
