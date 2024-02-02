@@ -10,6 +10,7 @@ import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
 import com.mp01.model.vo.Diary;
 import com.mp01.model.vo.Movie;
+import com.mp01.model.vo.User;
 
 public class ContentsStorageView {
 	private UserController uc = new UserController();
@@ -20,7 +21,7 @@ public class ContentsStorageView {
 	public static final String MOVIE_TYPE = "movie";
 	public static final String DIARY_TYPE = "diary";
 	
-	List<Contents> list = new ArrayList<>();
+	private User user = User.getInstance(); 
 	
 	public void mainMenu() {
 		while(true) {
@@ -328,7 +329,8 @@ public class ContentsStorageView {
 	}
 	
 	public void getContentsList(String contentsType) {
-		list = csc.getContentsList(contentsType);
+		user.setContentsList(csc.getContentsList(contentsType));
+		List<Contents> list = user.getContentsList();
 		if(!list.isEmpty()) {
 			if(contentsType.equals(DIARY_TYPE)) { // 일기
 				System.out.println("NO\t작성일\t\t제목\t\t\t감정");
@@ -418,7 +420,7 @@ public class ContentsStorageView {
 		
 		if(csc.addContents(c)) {
 			System.out.println("컨텐츠가 생성 되었습니다.");
-			list = csc.getContentsList(contentsType); // 목록 재조회
+			user.setContentsList(csc.getContentsList(contentsType)); // 목록 재조회
 		} else {
 			System.out.println("컨텐츠 생성을 실패하였습니다.");
 		}
@@ -428,8 +430,8 @@ public class ContentsStorageView {
 		System.out.print("조회할 컨텐츠 NO을 입력하세요. : ");
 		int rowNum = Integer.parseInt(sc.nextLine());
 		int contentsId = 0;
-		if(rowNum <= list.size()) {
-			contentsId = list.get(rowNum-1).getContentsId();
+		if(rowNum <= user.getContentsList().size()) {
+			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
 		
 		if(contentsId > 0) {
@@ -457,8 +459,8 @@ public class ContentsStorageView {
 		System.out.print("수정할 컨텐츠 NO을 입력하세요. : ");
 		int rowNum = Integer.parseInt(sc.nextLine());
 		int contentsId = 0;
-		if(rowNum <= list.size()) {
-			contentsId = list.get(rowNum-1).getContentsId();
+		if(rowNum <= user.getContentsList().size()) {
+			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
 		
 		if(contentsId == 0 || csc.getContents(contentsId, contentsType) == null) {
@@ -538,7 +540,7 @@ public class ContentsStorageView {
 		
 		if(result) {
 			System.out.println("컨텐츠가 수정 되었습니다.");
-			list = csc.getContentsList(contentsType);
+			user.setContentsList(csc.getContentsList(contentsType));
 		} else {
 			System.out.println("컨텐츠 수정을 실패하였습니다.");
 		}
@@ -548,13 +550,13 @@ public class ContentsStorageView {
 		System.out.print("삭제할 컨텐츠 NO을 입력하세요. : ");
 		int rowNum = Integer.parseInt(sc.nextLine());
 		int contentsId = 0;
-		if(rowNum <= list.size()) {
-			contentsId = list.get(rowNum-1).getContentsId();
+		if(rowNum <= user.getContentsList().size()) {
+			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
 		
 		if(contentsId > 0 && csc.deleteContents(contentsId, contentsType)) {
 			System.out.println("컨텐츠가 삭제 되었습니다.");
-			list = csc.getContentsList(contentsType);
+			user.setContentsList(csc.getContentsList(contentsType));
 		} else {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
 		}
