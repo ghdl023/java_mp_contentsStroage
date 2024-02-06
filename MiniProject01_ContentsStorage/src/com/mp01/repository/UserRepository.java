@@ -1,8 +1,10 @@
 package com.mp01.repository;
 
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.sql.PooledConnection;
 
@@ -15,20 +17,25 @@ public class UserRepository {
 	private User user = User.getInstance();
 
 	//	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver"; // DriverManager을 Connection Pool로 대체
-	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
+//	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
 	//	private final String DATABASE_URL = "jdbc:oracle:thin:@192.168.219.100:1521:xe";
-	private final String DATABASE_USER_ID = "kh";
-	private final String DATABASE_USER_PW = "kh";
+//	private final String DATABASE_USER_ID = "kh";
+//	private final String DATABASE_USER_PW = "kh";
 
 	PooledConnection pc;
 
 	{
 		try {
 			OracleConnectionPoolDataSource ocpds = new OracleConnectionPoolDataSource(); 
-			ocpds.setURL(DATABASE_URL);
-			ocpds.setUser(DATABASE_USER_ID);
-			ocpds.setPassword(DATABASE_USER_PW);
-
+			
+			Properties prop = new Properties();
+			prop.load(new FileInputStream("jdbc.properties"));
+//			System.out.println(prop);
+			
+			ocpds.setURL(prop.getProperty("DATABASE_URL_LOCALHOST"));
+			ocpds.setUser(prop.getProperty("DATABASE_USER_ID"));
+			ocpds.setPassword(prop.getProperty("DATABASE_USER_PW"));
+			
 			pc = ocpds.getPooledConnection();
 		} catch(Exception e) {
 			e.printStackTrace();
