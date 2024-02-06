@@ -7,6 +7,7 @@ public class User {
 	private String userId;
 	private String userPassword;
 	private boolean isLogin;
+	private char status = 'A'; // 계정상태여부 (A: 활성화, D: 탈퇴)
 	private List<Contents> contentsList = new ArrayList<Contents>();
 	
 	private static User instance = new User();
@@ -39,6 +40,14 @@ public class User {
 
 	public boolean isLogin() {
 		return (userId != null && !userId.equals("")) && (userPassword != null && !userPassword.equals(""));
+	}
+	
+	public char getStatus() {
+		return status;
+	}
+
+	public void setStatus(char status) {
+		this.status = status;
 	}
 
 	public List<Contents> getContentsList() {

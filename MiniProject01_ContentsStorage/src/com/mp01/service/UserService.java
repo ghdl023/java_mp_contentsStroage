@@ -49,6 +49,7 @@ public class UserService {
 			DBCP.commit(conn);
 			user.setUserId("");
 			user.setUserPassword("");
+			user.setStatus('D');
 		} else {
 			DBCP.rollback(conn);
 		}
@@ -57,7 +58,6 @@ public class UserService {
 	}
 	
 	public void signOut() {
-		User user = User.getInstance();
 		if(user.isLogin()) {
 			user.setUserId("");
 			user.setUserPassword("");

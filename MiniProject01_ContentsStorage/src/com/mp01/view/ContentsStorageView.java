@@ -44,14 +44,10 @@ public class ContentsStorageView {
 
 			switch(selMenu) {
 				case 1: 
-					if(signInMenu()) {
-						homeMenu();
-					}
+					signInMenu();
 					break;
 				case 2:
-					if(signUpMenu()) {
-						homeMenu();
-					}
+					signUpMenu();
 					break;
 				case 3: 
 					System.out.println("프로그램을 종료합니다.");
@@ -62,9 +58,7 @@ public class ContentsStorageView {
 		}
 	}
 	
-	public boolean signInMenu() {
-		boolean result = false;
-				
+	public void signInMenu() {
 		while(true) {
 			System.out.println("***********************************************");
 			System.out.println(" _     ___   ____ ___ _   _ ");
@@ -76,47 +70,45 @@ public class ContentsStorageView {
 			System.out.println();
 			System.out.println("***********************************************");
 			
+			System.out.println(">>>> 메인화면으로 이동하려면 exit를 입력하세요.");
 			System.out.print("아이디: " );
 			String userId = sc.nextLine();
+			
+			if(userId.toLowerCase().equals("exit")) {
+				return;
+			}
 	
 			System.out.print("비밀번호: ");
 			String userPassword = sc.nextLine();
-			
-			result = uc.signIn(userId, userPassword);
-			
-			if(result) {
-				System.out.println(userId + "님 어서오세요!");
-				break;
-			} else {
-				System.out.println("로그인을 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
+			uc.signIn(userId, userPassword);
+			System.out.println("끝!");
+			if(user.getStatus() == 'D') {
+				user.setStatus('A');
+				return;
 			}
 		}
-		
-		return result;
-
 	}
 	
-	public boolean signUpMenu() {
-		boolean result = false;
-		
+	public void signUpMenu() {
 		while(true) {
+			System.out.println(">>>> 메인화면으로 이동하려면 exit를 입력하세요.");
 			System.out.print("아이디: " );
 			String userId = sc.nextLine();
+			
+			if(userId.toLowerCase().equals("exit")) {
+				return;
+			}
 	
 			System.out.print("비밀번호: ");
 			String userPassword = sc.nextLine();
 			
-			result = uc.signUp(userId, userPassword);
+			uc.signUp(userId, userPassword);
 			
-			if(result) {
-				System.out.println(userId + "님 어서오세요!");
-				break;
-			} else {
-				System.out.println("회원가입을 실패하였습니다. 중복된 아이디입니다.");
+			if(user.getStatus() == 'D') {
+				user.setStatus('A');
+				return;
 			}
 		}
-		
-		return result;
 	}
 	
 	public void homeMenu() {
@@ -151,8 +143,8 @@ public class ContentsStorageView {
 					bookMenu();
 					break;
 				case 4:
-					boolean isDeleted = myPageMenu();
-					if(isDeleted) {
+					myPageMenu();
+					if(user.getStatus() == 'D') {  // 회원탈퇴시
 						return;
 					}
 					break;
@@ -305,7 +297,7 @@ public class ContentsStorageView {
 		
 	}
 	
-	public boolean myPageMenu() {
+	public void myPageMenu() {
 		while(true) {
 			System.out.println("1.회원탈퇴");
 			System.out.println("9.홈으로 돌아가기");
@@ -314,14 +306,11 @@ public class ContentsStorageView {
 			int selMenu = Integer.parseInt(sc.nextLine());
 			switch(selMenu) {
 				case 1:
-					if(deleteUser()) { // 삭제완료시
-						System.out.println("회원 탈퇴가 완료되었습니다. 메인화면으로 이동합니다.");
-						return true;
-					}
-					break;
+					deleteUser();
+					return;
 				case 9: 
 					System.out.println("홈으로 돌아가기");
-					return false;
+					return;
 				default:
 					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
@@ -567,9 +556,20 @@ public class ContentsStorageView {
 		String userInput = sc.nextLine();
 		
 		if(userInput.equals("탈퇴")) {
-			return uc.deleteUser();
+			uc.deleteUser(user.getUserId());
+			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	// *********************** 응답화면 ***************************
+
+	public void displaySuccess(String message) {
+		System.out.println("[요청 성공] " + message);
+	}
+	
+	public void displayFailed(String message) {
+		System.out.println("[요청 실패] " + message);
 	}
 }
