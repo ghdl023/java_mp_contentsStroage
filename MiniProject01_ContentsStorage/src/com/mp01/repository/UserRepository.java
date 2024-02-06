@@ -1,115 +1,59 @@
 package com.mp01.repository;
 
-import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Properties;
-
-import javax.sql.PooledConnection;
-
-import com.mp01.controller.UserController;
-import com.mp01.model.vo.User;
-
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
 public class UserRepository {
-	private User user = User.getInstance();
-
-	//	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver"; // DriverManager을 Connection Pool로 대체
-//	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
-	//	private final String DATABASE_URL = "jdbc:oracle:thin:@192.168.219.100:1521:xe";
-//	private final String DATABASE_USER_ID = "kh";
-//	private final String DATABASE_USER_PW = "kh";
-
-	PooledConnection pc;
-
-	{
-		try {
-			OracleConnectionPoolDataSource ocpds = new OracleConnectionPoolDataSource(); 
-			
-			Properties prop = new Properties();
-			prop.load(new FileInputStream("jdbc.properties"));
-//			System.out.println(prop);
-			
-			ocpds.setURL(prop.getProperty("DATABASE_URL_LOCALHOST"));
-			ocpds.setUser(prop.getProperty("DATABASE_USER_ID"));
-			ocpds.setPassword(prop.getProperty("DATABASE_USER_PW"));
-			
-			pc = ocpds.getPooledConnection();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public boolean signUp(String id, String password) {
+	public int signUp(Connection connection, String id, String password) {
 		String sql = "INSERT INTO CONTENTS_USER(USER_NAME, USER_PWD) VALUES(?, ?)";
 
 		int result = 0;
-		try (Connection connection = pc.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(sql)) {
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
 			pstmt.setString(1, id);
 			pstmt.setString(2, password);
 
 			result = pstmt.executeUpdate();
 
-			if(result == 1) { // 유저정보가 있으면 로그인
-				user.setUserId(id);
-				user.setUserPassword(password);
-			}
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
-		return result == 1;
+		return result;
 	}
 
-	public boolean signIn(String id, String password) {
+	public int signIn(Connection connection, String id, String password) {
 		String sql = "SELECT * FROM CONTENTS_USER WHERE 1=1 AND USER_NAME = ? AND USER_PWD = ? AND ENT_YN != 'Y' ";
 
 		int result = 0;
-		try (Connection connection = pc.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(sql)) {
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
 			pstmt.setString(1, id);
 			pstmt.setString(2, password);
 
 			result = pstmt.executeUpdate();
 
-			if(result == 1) { // 유저정보가 있으면 로그인
-				user.setUserId(id);
-				user.setUserPassword(password);
-			}
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
-		return result == 1;
+		return result;
 	}
 	
-	public boolean deleteUser() {
+	public int deleteUser(Connection connection, String userId) {
 		String sql = "UPDATE CONTENTS_USER SET ENT_YN = 'Y', ENT_DATE = SYSDATE WHERE 1=1 AND USER_NAME = ?";
 		
 		int result = 0;
-		try(Connection connection = pc.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(sql)){
+		try(PreparedStatement pstmt = connection.prepareStatement(sql)){
 			
-			pstmt.setString(1, user.getUserId());
+			pstmt.setString(1, userId);
 			
 			result = pstmt.executeUpdate();
-			
-			if(result == 1) {
-				user.setUserId("");
-				user.setUserPassword("");
-			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return result == 1;
+		return result;
 	}
 }

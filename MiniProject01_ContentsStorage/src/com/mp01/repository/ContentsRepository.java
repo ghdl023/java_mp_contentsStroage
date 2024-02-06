@@ -23,48 +23,8 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 public class ContentsRepository {
 	private User user = User.getInstance();
 
-	//	private final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver"; // DriverManager을 Connection Pool로 대체
-//	private final String DATABASE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
-	//	private final String DATABASE_URL = "jdbc:oracle:thin:@192.168.219.100:1521:xe";
-//	private final String DATABASE_USER_ID = "kh";
-//	private final String DATABASE_USER_PW = "kh";
-
-	PooledConnection pc;
-
-	{
-		try {
-			OracleConnectionPoolDataSource ocpds = new OracleConnectionPoolDataSource(); 
-			
-			Properties prop = new Properties();
-			prop.load(new FileInputStream("jdbc.properties"));
-//			System.out.println(prop);
-			
-			ocpds.setURL(prop.getProperty("DATABASE_URL_LOCALHOST"));
-			ocpds.setUser(prop.getProperty("DATABASE_USER_ID"));
-			ocpds.setPassword(prop.getProperty("DATABASE_USER_PW"));
-
-			pc = ocpds.getPooledConnection();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	//	public boolean checkDriverExits() { // 오라클 드라이버 클래스 체크
-	//		try {
-	//			Class.forName(DRIVER_NAME);
-	//			return true;
-	//		} catch (ClassNotFoundException e) {
-	//			e.printStackTrace();
-	//			return false;
-	//		}
-	//	}
-
-	public List<Contents> getContentsList(String contentsType) {
+	public List<Contents> getContentsList(Connection connection, String contentsType) {
 		List<Contents> list = new ArrayList<>();
-
-		//		if(!checkDriverExits()) { // DriverManager 사용시만 필요
-		//			return list;
-		//		}
 
 		String sql = "";
 		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
@@ -88,9 +48,7 @@ public class ContentsRepository {
 		sql += "AND USER_ID = '" + user.getUserId() + "'";
 
 
-		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
-				Connection connection = pc.getConnection(); // 커넥션풀 사용 
-				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 
 			try (ResultSet resultSet = preparedStatement.executeQuery()){
 
@@ -142,23 +100,16 @@ public class ContentsRepository {
 		return list;
 	}
 
-	public int addContents(Contents c) {
-		int insertCount = 0;
-
-		//		if(!checkDriverExits()) {
-		//			return insertCount;
-		//		}
-
+	public int addContents(Connection connection, Contents c) {
+		int result = 0;
 
 		String sql = "INSERT INTO CONTENTS(id, title, content, create_date, contents_type_id, user_id) VALUES(SEQ_CTS.NEXTVAL, ?, ?, ?, ?, ?)";
 
-		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
-				Connection connection = pc.getConnection(); // 커넥션풀 사용 
-				PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
 
 			// Auto Commit off setting
-			connection.setAutoCommit(false); // 또는 Run Configuration > Arguments > VM 에 다음 명령어 "-Doracle.jdbc.autoCommitSpecCompliant=false"
-			Savepoint sp = connection.setSavepoint();
+//			connection.setAutoCommit(false); // 또는 Run Configuration > Arguments > VM 에 다음 명령어 "-Doracle.jdbc.autoCommitSpecCompliant=false"
+//			Savepoint sp = connection.setSavepoint();
 			
 			//			System.out.println(c.getTitle());
 			//			System.out.println(c.getContent());
@@ -173,7 +124,7 @@ public class ContentsRepository {
 			preparedStatement.setInt(4, contents_type_id);
 			preparedStatement.setString(5, user.getUserId());
 
-			insertCount = preparedStatement.executeUpdate();
+			result = preparedStatement.executeUpdate();
 			
 			//			System.out.println("insertCount: " + insertCount );
 
@@ -193,7 +144,7 @@ public class ContentsRepository {
 					preparedStatement2.setInt(1, generatedKey);
 					preparedStatement2.setString(2, d.getFeelings());
 
-					insertCount = preparedStatement2.executeUpdate();
+					result = preparedStatement2.executeUpdate();
 					//					System.out.println("insertCount: " + insertCount );
 
 				} catch (Exception e) {
@@ -213,7 +164,7 @@ public class ContentsRepository {
 					preparedStatement2.setString(7, m.getIsLikeYn());
 					preparedStatement2.setInt(8, m.getStarCount());
 
-					insertCount = preparedStatement2.executeUpdate();
+					result = preparedStatement2.executeUpdate();
 
 					//					System.out.println("insertCount: " + insertCount );
 
@@ -232,7 +183,7 @@ public class ContentsRepository {
 					preparedStatement2.setString(5, b.getIsLikeYn());
 					preparedStatement2.setInt(6, b.getStarCount());
 
-					insertCount = preparedStatement2.executeUpdate();
+					result = preparedStatement2.executeUpdate();
 
 					//					System.out.println("insertCount: " + insertCount );
 
@@ -240,25 +191,15 @@ public class ContentsRepository {
 					e.printStackTrace();
 				}
 			} 
-			
-			if(insertCount > 0) { // commit
-				connection.commit();
-			} else { // rollback
-				connection.rollback(sp);
-			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return insertCount;
+		return result;
 	}
 
-	public Contents getContents(int contentsId, String contentsType) {
-		//		if(!checkDriverExits()) {
-		//			return null;
-		//		}
-
+	public Contents getContents(Connection connection, int contentsId, String contentsType) {
 		String sql = "";
 
 		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
@@ -285,9 +226,7 @@ public class ContentsRepository {
 
 		Contents c = null;
 
-		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
-				Connection connection = pc.getConnection(); // 커넥션풀 사용 
-				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 
 			try (ResultSet resultSet = preparedStatement.executeQuery()){
 
@@ -333,23 +272,17 @@ public class ContentsRepository {
 		return c;
 	}
 
-	public boolean updateContents(Contents c) {
-		//		if(!checkDriverExits()) {
-		//			return false;
-		//		}
-
+	public int updateContents(Connection connection, Contents c) {
 		int result = 0;
 
 		String contentsType = c.getType();
 		String sql = "UPDATE CONTENTS SET TITLE=?, CONTENT=?, CREATE_DATE=? WHERE ID=?";
 
-		try (// Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
-				Connection connection = pc.getConnection(); // 커넥션풀 사용 
-				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			
 			// Auto Commit off setting
-			connection.setAutoCommit(false);
-			Savepoint sp = connection.setSavepoint();
+//			connection.setAutoCommit(false);
+//			Savepoint sp = connection.setSavepoint();
 
 			preparedStatement.setString(1, c.getTitle());
 			preparedStatement.setString(2, c.getContent());
@@ -428,44 +361,27 @@ public class ContentsRepository {
 					e.printStackTrace();
 				}
 			}
-			
-			if(result > 0) { // commit
-				connection.commit();
-			} else { // rollback
-				connection.rollback(sp);
-			}
-
-
-
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-
-
-		return result == 1;
+		return result;
 	}
 
-	public boolean deleteContents(int contentsId, String contentsType) {
-		//		if(!checkDriverExits()) {
-		//			return false;
-		//		}
-
+	public int deleteContents(Connection connection, int contentsId, String contentsType) {
 		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());		
-		int deleteCount = 0;
+		int result = 0;
 
-		try ( // Connection connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER_ID, DATABASE_USER_PW); // 커넥션풀을 사용하지 않을때
-				Connection connection = pc.getConnection(); // 커넥션풀 사용 
-				PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 
-			deleteCount = preparedStatement.executeUpdate();
+			result = preparedStatement.executeUpdate();
 			//			System.out.println("deleteCount: " + deleteCount);
 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
-		return deleteCount == 1;
+		return result;
 	}
 }
