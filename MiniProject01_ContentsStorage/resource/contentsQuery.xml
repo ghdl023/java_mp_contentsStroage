@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Contents Query</comment>
+<entry key="getContentsList.diary">
+SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS 
+FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id 
+WHERE 1=1 
+AND CONTENTS_TYPE_ID = 1
+</entry>
+<entry key="getContentsList.movie">
+SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, TO_CHAR(M.RELEASE_DATE, 'YYYY-MM-DD') RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT 
+FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id 
+WHERE 1=1 
+AND CONTENTS_TYPE_ID = 2
+</entry>
+<entry key="getContentsList.book">
+SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT 
+FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id 
+WHERE 1=1 
+AND CONTENTS_TYPE_ID = 3
+</entry>
+
+<entry key="addContents.contents">
+INSERT INTO CONTENTS(id, title, content, create_date, contents_type_id, user_id) VALUES(SEQ_CTS.NEXTVAL, ?, ?, ?, ?, ?)
+</entry>
+<entry key="addContents.diary">
+INSERT INTO CONTENTS_DIARY(id, contents_id, feelings) VALUES(SEQ_CTS_DIARY.NEXTVAL, ?, ?)
+</entry>
+<entry key="addContents.movie">
+INSERT INTO CONTENTS_MOVIE(id, contents_id, release_date, director, actors, place, withs, is_like_yn, star_count) VALUES(SEQ_CTS_MOVIE.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?)
+</entry>
+<entry key="addContents.book">
+INSERT INTO CONTENTS_BOOK(id, contents_id, author, publisher, price, is_like_yn, star_count) VALUES(SEQ_CTS_BOOK.NEXTVAL, ?, ?, ?, ?, ?, ?)
+</entry>
+
+<entry key="getContents.diary">
+SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS 
+FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id 
+WHERE 1=1 
+AND CONTENTS_TYPE_ID = 1
+</entry>
+<entry key="getContents.movie">
+SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, TO_CHAR(M.RELEASE_DATE, 'YYYY-MM-DD') RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT 
+FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id 
+WHERE 1=1 
+AND CONTENTS_TYPE_ID = 2 
+</entry>
+<entry key="getContents.book">
+SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT 
+FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id 
+WHERE 1=1 
+AND CONTENTS_TYPE_ID = 3 
+</entry>
+
+<entry key="updateContents.contents">
+UPDATE CONTENTS SET TITLE=?, CONTENT=?, CREATE_DATE=? WHERE ID=?
+</entry>
+<entry key="updateContents.diary">
+UPDATE CONTENTS_DIARY 
+SET FEELINGS=? 
+WHERE 1=1 
+AND CONTENTS_ID=?
+</entry>
+<entry key="updateContents.movie">
+UPDATE CONTENTS_MOVIE 
+SET RELEASE_DATE=?, DIRECTOR=?, ACTORS=?, PLACE=?, WITHS=?, IS_LIKE_YN=?, STAR_COUNT=? 
+WHERE 1=1 
+AND CONTENTS_ID=?
+</entry>
+<entry key="updateContents.book">
+UPDATE CONTENTS_BOOK 
+SET AUTHOR=?, PUBLISHER=?, PRICE=?, IS_LIKE_YN=? STAR_COUNT=? 
+WHERE 1=1 
+AND CONTENTS_ID=?
+</entry>
+
+<entry key="deleteContents">
+DELETE FROM CONTENTS WHERE 1=1 AND ID=? AND USER_ID=?
+</entry>
+</properties>

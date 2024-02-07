@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.mp01.controller.ContentsStorageController;
+import com.mp01.controller.ContentsController;
 import com.mp01.controller.UserController;
 import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
@@ -14,7 +14,7 @@ import com.mp01.model.vo.User;
 
 public class ContentsStorageView {
 	private UserController uc = new UserController();
-	private ContentsStorageController csc = new ContentsStorageController();
+	private ContentsController csc = new ContentsController();
 	private Scanner sc = new Scanner(System.in);
 	
 	public static final String BOOK_TYPE = "book";

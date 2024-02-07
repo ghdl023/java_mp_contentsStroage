@@ -18,7 +18,7 @@ public class DBCP {
 			OracleConnectionPoolDataSource ocpds = new OracleConnectionPoolDataSource(); 
 			
 			Properties prop = new Properties();
-			prop.load(new FileInputStream("jdbc.properties"));
+			prop.load(new FileInputStream("resource/jdbc.properties"));
 //			System.out.println(prop);
 			
 			ocpds.setURL(prop.getProperty("DATABASE_URL_LOCALHOST"));

@@ -5,7 +5,7 @@ import java.util.List;
 import com.mp01.model.vo.Contents;
 import com.mp01.service.ContentsService;
 
-public class ContentsStorageController {
+public class ContentsController {
 //	private JDBCModelDAO dbConnect = new JDBCModelDAO();
 	private ContentsService contentsService = new ContentsService();
 	

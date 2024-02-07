@@ -1,15 +1,14 @@
 package com.mp01.repository;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import javax.sql.PooledConnection;
 
 import com.mp01.model.vo.Book;
 import com.mp01.model.vo.Contents;
@@ -18,32 +17,44 @@ import com.mp01.model.vo.Movie;
 import com.mp01.model.vo.User;
 import com.mp01.view.ContentsStorageView;
 
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
-
 public class ContentsRepository {
 	private User user = User.getInstance();
+	private Properties prop = new Properties();
+	
+	{
+		try {
+			prop.loadFromXML(new FileInputStream("resource/contentsQuery.xml"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public List<Contents> getContentsList(Connection connection, String contentsType) {
 		List<Contents> list = new ArrayList<>();
 
 		String sql = "";
 		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
-			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS ";
-			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id ";
-			sql += "WHERE 1=1 ";
-			sql += "AND CONTENTS_TYPE_ID = 1";
+//			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS ";
+//			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id ";
+//			sql += "WHERE 1=1 ";
+//			sql += "AND CONTENTS_TYPE_ID = 1";
+			sql = prop.getProperty("getContentsList.diary");
 
 		} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
-			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, TO_CHAR(M.RELEASE_DATE, 'YYYY-MM-DD') RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT ";
-			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id ";
-			sql += "WHERE 1=1 ";
-			sql += "AND CONTENTS_TYPE_ID = 2";
+//			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, TO_CHAR(M.RELEASE_DATE, 'YYYY-MM-DD') RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT ";
+//			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id ";
+//			sql += "WHERE 1=1 ";
+//			sql += "AND CONTENTS_TYPE_ID = 2";
+			sql = prop.getProperty("getContentsList.movie");
 
 		} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
-			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT ";
-			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id ";
-			sql += "WHERE 1=1 ";
-			sql += "AND CONTENTS_TYPE_ID = 3";
+//			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT ";
+//			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id ";
+//			sql += "WHERE 1=1 ";
+//			sql += "AND CONTENTS_TYPE_ID = 3";
+			sql = prop.getProperty("getContentsList.book");
 		}
 		sql += "AND USER_ID = '" + user.getUserId() + "'";
 
@@ -103,8 +114,9 @@ public class ContentsRepository {
 	public int addContents(Connection connection, Contents c) {
 		int result = 0;
 
-		String sql = "INSERT INTO CONTENTS(id, title, content, create_date, contents_type_id, user_id) VALUES(SEQ_CTS.NEXTVAL, ?, ?, ?, ?, ?)";
-
+//		String sql = "INSERT INTO CONTENTS(id, title, content, create_date, contents_type_id, user_id) VALUES(SEQ_CTS.NEXTVAL, ?, ?, ?, ?, ?)";
+		String sql = prop.getProperty("addContents.contents");
+		
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
 
 			// Auto Commit off setting
@@ -139,7 +151,8 @@ public class ContentsRepository {
 
 			if(c instanceof Diary) {
 				Diary d = (Diary)c;
-				sql = "INSERT INTO CONTENTS_DIARY(id, contents_id, feelings) VALUES(SEQ_CTS_DIARY.NEXTVAL, ?, ?)";
+//				sql = "INSERT INTO CONTENTS_DIARY(id, contents_id, feelings) VALUES(SEQ_CTS_DIARY.NEXTVAL, ?, ?)";
+				sql = prop.getProperty("addContents.diary");
 				try (PreparedStatement preparedStatement2 = connection.prepareStatement(sql)){
 					preparedStatement2.setInt(1, generatedKey);
 					preparedStatement2.setString(2, d.getFeelings());
@@ -152,8 +165,9 @@ public class ContentsRepository {
 				}
 			} else if(c instanceof Movie) {
 				Movie m = (Movie)c;
-				sql = "INSERT INTO CONTENTS_MOVIE(id, contents_id, release_date, director, actors, place, withs, is_like_yn, star_count)"
-						+ " VALUES(SEQ_CTS_MOVIE.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?)";
+//				sql = "INSERT INTO CONTENTS_MOVIE(id, contents_id, release_date, director, actors, place, withs, is_like_yn, star_count)"
+//						+ " VALUES(SEQ_CTS_MOVIE.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?)";
+				sql = prop.getProperty("addContents.movie");
 				try (PreparedStatement preparedStatement2 = connection.prepareStatement(sql)){
 					preparedStatement2.setInt(1, generatedKey);
 					preparedStatement2.setString(2, m.getReleaseDate());
@@ -173,8 +187,9 @@ public class ContentsRepository {
 				}
 			} else if(c instanceof Book) {
 				Book b = (Book)c;
-				sql = "INSERT INTO CONTENTS_BOOK(id, contents_id, author, publisher, price, is_like_yn, star_count)"
-						+ " VALUES(SEQ_CTS_BOOK.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+//				sql = "INSERT INTO CONTENTS_BOOK(id, contents_id, author, publisher, price, is_like_yn, star_count)"
+//						+ " VALUES(SEQ_CTS_BOOK.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+				sql = prop.getProperty("addContents.book");
 				try (PreparedStatement preparedStatement2 = connection.prepareStatement(sql)){
 					preparedStatement2.setInt(1, generatedKey);
 					preparedStatement2.setString(2, b.getAuthor());
@@ -203,22 +218,25 @@ public class ContentsRepository {
 		String sql = "";
 
 		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
-			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS ";
-			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id ";
-			sql += "WHERE 1=1 ";
-			sql += "AND CONTENTS_TYPE_ID = 1 ";
+//			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, D.FEELINGS ";
+//			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_DIARY D ON C.id = D.contents_id ";
+//			sql += "WHERE 1=1 ";
+//			sql += "AND CONTENTS_TYPE_ID = 1 ";
+			sql = prop.getProperty("getContents.diary");
 
 		} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
-			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, TO_CHAR(M.RELEASE_DATE, 'YYYY-MM-DD') RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT ";
-			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id ";
-			sql += "WHERE 1=1 ";
-			sql += "AND CONTENTS_TYPE_ID = 2 ";
-
+//			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, TO_CHAR(M.RELEASE_DATE, 'YYYY-MM-DD') RELEASE_DATE, M.DIRECTOR, M.ACTORS, M.PLACE, M.WITHS, M.IS_LIKE_YN, M.STAR_COUNT ";
+//			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_MOVIE M ON C.id = M.contents_id ";
+//			sql += "WHERE 1=1 ";
+//			sql += "AND CONTENTS_TYPE_ID = 2 ";
+			sql = prop.getProperty("getContents.movie");
+			
 		} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
-			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT ";
-			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id ";
-			sql += "WHERE 1=1 ";
-			sql += "AND CONTENTS_TYPE_ID = 3 ";
+//			sql += "SELECT C.ID, C.TITLE, C.CONTENT, TO_CHAR(C.CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, C.USER_ID, B.AUTHOR, B.PUBLISHER, B.PRICE, B.IS_LIKE_YN, B.STAR_COUNT ";
+//			sql += "FROM CONTENTS C LEFT JOIN CONTENTS_BOOK B ON C.id = B.contents_id ";
+//			sql += "WHERE 1=1 ";
+//			sql += "AND CONTENTS_TYPE_ID = 3 ";
+			sql = prop.getProperty("getContents.book");
 		}
 		sql += "AND C.id = " + contentsId + " ";
 		sql += "AND USER_ID = '" + user.getUserId() + "'";
@@ -276,7 +294,8 @@ public class ContentsRepository {
 		int result = 0;
 
 		String contentsType = c.getType();
-		String sql = "UPDATE CONTENTS SET TITLE=?, CONTENT=?, CREATE_DATE=? WHERE ID=?";
+//		String sql = "UPDATE CONTENTS SET TITLE=?, CONTENT=?, CREATE_DATE=? WHERE ID=?";
+		String sql = prop.getProperty("updateContents.contents");
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			
@@ -292,10 +311,11 @@ public class ContentsRepository {
 			result = preparedStatement.executeUpdate();
 
 			if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
-				sql = "UPDATE CONTENTS_DIARY "
-						+ "SET FEELINGS=? "
-						+ "WHERE 1=1 "
-						+ "AND CONTENTS_ID=?";
+//				sql = "UPDATE CONTENTS_DIARY "
+//						+ "SET FEELINGS=? "
+//						+ "WHERE 1=1 "
+//						+ "AND CONTENTS_ID=?";
+				sql = prop.getProperty("updateContents.diary");
 
 				try(PreparedStatement preparedStatement2 = connection.prepareStatement(sql)) {
 					Diary d = (Diary) c;
@@ -309,16 +329,17 @@ public class ContentsRepository {
 
 
 			} else if(contentsType.equals(ContentsStorageView.MOVIE_TYPE)) {
-				sql = "UPDATE CONTENTS_MOVIE "
-						+ "SET RELEASE_DATE=?, "
-						+ "DIRECTOR=?, "
-						+ "ACTORS=?, "
-						+ "PLACE=?, "
-						+ "WITHS=?, "
-						+ "IS_LIKE_YN=?, "
-						+ "STAR_COUNT=? "
-						+ "WHERE 1=1 "
-						+ "AND CONTENTS_ID=?";
+//				sql = "UPDATE CONTENTS_MOVIE "
+//						+ "SET RELEASE_DATE=?, "
+//						+ "DIRECTOR=?, "
+//						+ "ACTORS=?, "
+//						+ "PLACE=?, "
+//						+ "WITHS=?, "
+//						+ "IS_LIKE_YN=?, "
+//						+ "STAR_COUNT=? "
+//						+ "WHERE 1=1 "
+//						+ "AND CONTENTS_ID=?";
+				sql = prop.getProperty("updateContents.movie");
 
 				try(PreparedStatement preparedStatement2 = connection.prepareStatement(sql)) { 
 					Movie m = (Movie)c;
@@ -337,14 +358,15 @@ public class ContentsRepository {
 				}
 
 			} else if(contentsType.equals(ContentsStorageView.BOOK_TYPE)) {
-				sql = "UPDATE CONTENTS_BOOK "
-						+ "SET AUTHOR=?, "
-						+ "PUBLISHER=?, "
-						+ "PRICE=?, "
-						+ "IS_LIKE_YN=? "
-						+ "STAR_COUNT=? "
-						+ "WHERE 1=1 "
-						+ "AND CONTENTS_ID=?";
+//				sql = "UPDATE CONTENTS_BOOK "
+//						+ "SET AUTHOR=?, "
+//						+ "PUBLISHER=?, "
+//						+ "PRICE=?, "
+//						+ "IS_LIKE_YN=? "
+//						+ "STAR_COUNT=? "
+//						+ "WHERE 1=1 "
+//						+ "AND CONTENTS_ID=?";
+				sql = prop.getProperty("updateContents.book");
 
 				try(PreparedStatement preparedStatement2 = connection.prepareStatement(sql)) {
 					Book b = (Book)c;
@@ -363,20 +385,21 @@ public class ContentsRepository {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		return result;
 	}
 
 	public int deleteContents(Connection connection, int contentsId, String contentsType) {
-		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());		
+//		String sql = String.format("DELETE FROM CONTENTS WHERE 1=1 AND ID=%d AND USER_ID='%s'", contentsId, user.getUserId());		
+		String sql = prop.getProperty("deleteContents");
 		int result = 0;
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-
+			preparedStatement.setInt(1, contentsId);
+			preparedStatement.setString(2, user.getUserId());
+			
 			result = preparedStatement.executeUpdate();
-			//			System.out.println("deleteCount: " + deleteCount);
 
 		} catch(Exception e) {
 			e.printStackTrace();
