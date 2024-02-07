@@ -44,10 +44,14 @@ public class ContentsStorageView {
 
 				switch(selMenu) {
 					case 1: 
-						signInMenu();
+						if(signInMenu()) {
+							homeMenu();
+						}
 						break;
 					case 2:
-						signUpMenu();
+						if(signUpMenu()) {
+							homeMenu();
+						}
 						break;
 					case 3: 
 						System.out.println("프로그램을 종료합니다.");
@@ -61,7 +65,7 @@ public class ContentsStorageView {
 		}
 	}
 	
-	public void signInMenu() {
+	public boolean signInMenu() {
 		while(true) {
 			System.out.println("***********************************************");
 			System.out.println(" _     ___   ____ ___ _   _ ");
@@ -78,38 +82,50 @@ public class ContentsStorageView {
 			String userId = sc.nextLine();
 			
 			if(userId.toLowerCase().equals("exit")) {
-				return;
+				return false;
 			}
 	
 			System.out.print("비밀번호: ");
 			String userPassword = sc.nextLine();
-			uc.signIn(userId, userPassword);
-			if(user.getStatus() == 'D') {
-				user.setStatus('A');
-				return;
+			boolean result = uc.signIn(userId, userPassword);
+			
+			if(result) {
+				user.setUserId(userId);
+				user.setUserPassword(userPassword);
+				return true;
 			}
+			
+//			if(user.getStatus() == 'D') {
+//				user.setStatus('A');
+//				return false;
+//			}
 		}
 	}
 	
-	public void signUpMenu() {
+	public boolean signUpMenu() {
 		while(true) {
 			System.out.println(">>>> 메인화면으로 이동하려면 exit를 입력하세요.");
 			System.out.print("아이디: " );
 			String userId = sc.nextLine();
 			
 			if(userId.toLowerCase().equals("exit")) {
-				return;
+				return false;
 			}
 	
 			System.out.print("비밀번호: ");
 			String userPassword = sc.nextLine();
 			
-			uc.signUp(userId, userPassword);
+			boolean result = uc.signUp(userId, userPassword);
+			if(result) {
+				user.setUserId(userId);
+				user.setUserPassword(userPassword);
+				return true;
+			} 
 			
-			if(user.getStatus() == 'D') {
-				user.setStatus('A');
-				return;
-			}
+//			if(user.getStatus() == 'D') {
+//				user.setStatus('A');
+//				return false;
+//			}
 		}
 	}
 	
@@ -153,7 +169,10 @@ public class ContentsStorageView {
 						}
 						break;
 					case 9: 
-						uc.signOut();
+						if(user.isLogin()) {
+							user.setUserId("");
+							user.setUserPassword("");
+						}
 						System.out.println("로그아웃 되었습니다.");
 						return;
 					default:
@@ -175,7 +194,7 @@ public class ContentsStorageView {
 			System.out.println("|____/|_|\\__,_|_|   \\__, |");
 			System.out.println("                     |___/ ");
 			System.out.println();
-			user.setContentsList(csc.getContentsList(DIARY_TYPE));
+			user.setContentsList(csc.getContentsList(user.getUserId(), DIARY_TYPE));
 			System.out.println("***********************************************");
 			
 			System.out.println("1.일기 추가");
@@ -222,7 +241,7 @@ public class ContentsStorageView {
 			System.out.println("| |  | | (_) \\ V /| |  __/");
 			System.out.println("|_|  |_|\\___/ \\_/ |_|\\___|");
 			System.out.println();
-			user.setContentsList(csc.getContentsList(MOVIE_TYPE));
+			user.setContentsList(csc.getContentsList(user.getUserId(), MOVIE_TYPE));
 			System.out.println("***********************************************");
 			
 			System.out.println("1.영화 추가");
@@ -269,7 +288,7 @@ public class ContentsStorageView {
 			System.out.println("| |_) | (_) | (_) |   < ");
 			System.out.println("|____/ \\___/ \\___/|_|\\_\\");
 			System.out.println();
-			user.setContentsList(csc.getContentsList(BOOK_TYPE));
+			user.setContentsList(csc.getContentsList(user.getUserId(), BOOK_TYPE));
 			System.out.println("***********************************************");
 			
 //			System.out.println("1.목록 보기");
@@ -308,7 +327,7 @@ public class ContentsStorageView {
 		
 	}
 	
-	public void myPageMenu() {
+	public boolean myPageMenu() {
 		while(true) {
 			System.out.println("1.회원탈퇴");
 			System.out.println("9.홈으로 돌아가기");
@@ -318,11 +337,13 @@ public class ContentsStorageView {
 				int selMenu = Integer.parseInt(sc.nextLine());
 				switch(selMenu) {
 					case 1:
-						deleteUser();
-						return;
+						if(deleteUser()) {
+							return true;
+						} 
+						break;
 					case 9: 
 						System.out.println("홈으로 돌아가기");
-						return;
+						return false;
 					default:
 						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 				}
@@ -333,7 +354,7 @@ public class ContentsStorageView {
 	}
 	
 	public void getContentsList(String contentsType) {
-		user.setContentsList(csc.getContentsList(contentsType));
+		user.setContentsList(csc.getContentsList(user.getUserId(), contentsType));
 	}
 	
 	public void addContents(String contentsType) {
@@ -405,7 +426,7 @@ public class ContentsStorageView {
 			c = new Book(contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
 		
-		csc.addContents(c);
+		csc.addContents(user.getUserId(), c);
 	}
 	
 	public void getContents(String contentsType) {
@@ -415,7 +436,7 @@ public class ContentsStorageView {
 		if(rowNum <= user.getContentsList().size()) {
 			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
-		csc.getContents(contentsId, contentsType);
+		csc.getContents(user.getUserId(), contentsId, contentsType);
 	}
 	
 	public void updateContents(String contentsType) {
@@ -560,7 +581,7 @@ public class ContentsStorageView {
 			c = new Book(contentsId, contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
 		
-		csc.updateContents(c);
+		csc.updateContents(user.getUserId(), c);
 	}
 	
 	public void deleteContents(String contentsType) {
@@ -570,7 +591,7 @@ public class ContentsStorageView {
 		if(rowNum <= user.getContentsList().size()) {
 			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
-		csc.deleteContents(contentsId, contentsType);
+		csc.deleteContents(user.getUserId(), contentsId, contentsType);
 	}
 	
 	public boolean deleteUser() {
@@ -578,8 +599,14 @@ public class ContentsStorageView {
 		String userInput = sc.nextLine();
 		
 		if(userInput.equals("탈퇴")) {
-			uc.deleteUser(user.getUserId());
-			return true;
+			boolean result = uc.deleteUser(user.getUserId());
+			if(result) {
+				user.setUserId("");
+				user.setUserPassword("");
+				user.setStatus('D');
+				return true;
+			}
+			return false;
 		} else {
 			return false;
 		}

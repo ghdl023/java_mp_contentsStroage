@@ -7,11 +7,10 @@ import com.mp01.service.ContentsService;
 import com.mp01.view.ContentsStorageView;
 
 public class ContentsController {
-//	private JDBCModelDAO dbConnect = new JDBCModelDAO();
 	private ContentsService contentsService = new ContentsService();
 	
-	public void addContents(Contents c) {
-		boolean result = contentsService.addContents(c);
+	public void addContents(String userId, Contents c) {
+		boolean result = contentsService.addContents(userId, c);
 		if(result) {
 			new ContentsStorageView().displaySuccess("컨텐츠가 추가 되었습니다.");
 		} else {
@@ -19,8 +18,8 @@ public class ContentsController {
 		}
 	}
 	
-	public void getContents(int contentsId, String contentsType) {
-		Contents c = contentsService.getContents(contentsId, contentsType);
+	public void getContents(String userId, int contentsId, String contentsType) {
+		Contents c = contentsService.getContents(userId, contentsId, contentsType);
 		
 		if(c != null) {
 			new ContentsStorageView().displayContents(c);
@@ -29,8 +28,8 @@ public class ContentsController {
 		}
 	}
 	
-	public void updateContents(Contents c) {
-		boolean result = contentsService.updateContents(c);
+	public void updateContents(String userId, Contents c) {
+		boolean result = contentsService.updateContents(userId, c);
 		
 		if(result) {
 			new ContentsStorageView().displaySuccess("컨텐츠가 수정 되었습니다.");
@@ -39,8 +38,8 @@ public class ContentsController {
 		}
 	}
 	
-	public void deleteContents(int contentsId, String contentsType) {
-		boolean result = contentsService.deleteContents(contentsId, contentsType);
+	public void deleteContents(String userId, int contentsId, String contentsType) {
+		boolean result = contentsService.deleteContents(userId, contentsId, contentsType);
 		if(result) {
 			new ContentsStorageView().displaySuccess("컨텐츠가 삭제 되었습니다.");
 		} else {
@@ -48,8 +47,8 @@ public class ContentsController {
 		}
 	}
 	
-	public List<Contents> getContentsList(String contentsType) {
-		List<Contents> list = contentsService.getContentsList(contentsType);
+	public List<Contents> getContentsList(String userId, String contentsType) {
+		List<Contents> list = contentsService.getContentsList(userId, contentsType);
 		if(!list.isEmpty()) {
 			new ContentsStorageView().displayContentsList(list);
 		} else {

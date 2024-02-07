@@ -11,9 +11,9 @@ public class ContentsService {
 	
 	private ContentsRepository contentsRepository = new ContentsRepository();
 
-	public boolean addContents(Contents c) {
+	public boolean addContents(String userId, Contents c) {
 		Connection conn = DBCP.getConnection(false);
-		int result = contentsRepository.addContents(conn, c);
+		int result = contentsRepository.addContents(conn, userId, c);
 		
 		if(result > 0) {
 			DBCP.commit(conn);
@@ -24,14 +24,14 @@ public class ContentsService {
 		return result == 1;
 	}
 	
-	public Contents getContents(int contentsId, String contentsType) {
+	public Contents getContents(String userId, int contentsId, String contentsType) {
 		Connection conn = DBCP.getConnection(true);
-		return contentsRepository.getContents(conn, contentsId, contentsType);
+		return contentsRepository.getContents(conn, userId, contentsId, contentsType);
 	}
 	
-	public boolean updateContents(Contents c) {
+	public boolean updateContents(String userId, Contents c) {
 		Connection conn = DBCP.getConnection(false);
-		int result = contentsRepository.updateContents(conn, c);
+		int result = contentsRepository.updateContents(conn, userId, c);
 		
 		if(result > 0) {
 			DBCP.commit(conn);
@@ -42,9 +42,9 @@ public class ContentsService {
 		return result == 1;
 	}
 	
-	public boolean deleteContents(int contentsId, String contentsType) {
+	public boolean deleteContents(String userId, int contentsId, String contentsType) {
 		Connection conn = DBCP.getConnection(false);
-		int result = contentsRepository.deleteContents(conn, contentsId, contentsType);
+		int result = contentsRepository.deleteContents(conn, userId, contentsId, contentsType);
 		
 		if(result > 0) {
 			DBCP.commit(conn);
@@ -55,8 +55,8 @@ public class ContentsService {
 		return result == 1;
 	}
 	
-	public List<Contents> getContentsList(String contentsType) {
+	public List<Contents> getContentsList(String userId, String contentsType) {
 		Connection conn = DBCP.getConnection(true);
-		return contentsRepository.getContentsList(conn, contentsType);
+		return contentsRepository.getContentsList(conn, userId, contentsType);
 	}
 }

@@ -9,7 +9,6 @@ import com.mp01.repository.UserRepository;
 public class UserService {
 
 	private UserRepository userRepository = new UserRepository();
-	private User user = User.getInstance();
 	
 	public boolean signUp(String id, String password) {
 		Connection conn = DBCP.getConnection(false);
@@ -18,8 +17,6 @@ public class UserService {
 
 		if(result > 0) { // 유저정보가 있으면 로그인
 			DBCP.commit(conn);
-			user.setUserId(id);
-			user.setUserPassword(password);
 		} else {
 			DBCP.rollback(conn);
 		}
@@ -32,35 +29,20 @@ public class UserService {
 		int result = 0;
 		result = userRepository.signIn(conn, id, password);
 		
-		if(result > 0) { // 유저정보가 있으면 로그인
-			user.setUserId(id);
-			user.setUserPassword(password);
-		}
-		
 		return result == 1;
 	}
 	
-	public boolean deleteUser() {
+	public boolean deleteUser(String userId) {
 		Connection conn = DBCP.getConnection(false);
 		int result = 0;
-		result = userRepository.deleteUser(conn, user.getUserId());
+		result = userRepository.deleteUser(conn, userId);
 		
 		if(result > 0) {
 			DBCP.commit(conn);
-			user.setUserId("");
-			user.setUserPassword("");
-			user.setStatus('D');
 		} else {
 			DBCP.rollback(conn);
 		}
 		
 		return result == 1;
 	}
-	
-	public void signOut() {
-		if(user.isLogin()) {
-			user.setUserId("");
-			user.setUserPassword("");
-		}
-	} 
 }
