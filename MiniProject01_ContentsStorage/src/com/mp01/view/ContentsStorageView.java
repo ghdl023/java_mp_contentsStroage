@@ -39,20 +39,24 @@ public class ContentsStorageView {
 
 			System.out.print("메뉴 선택 : ");
 
-			int selMenu = Integer.parseInt(sc.nextLine());
+			try {
+				int selMenu = Integer.parseInt(sc.nextLine());
 
-			switch(selMenu) {
-				case 1: 
-					signInMenu();
-					break;
-				case 2:
-					signUpMenu();
-					break;
-				case 3: 
-					System.out.println("프로그램을 종료합니다.");
-					System.exit(0);
-				default:
-					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+				switch(selMenu) {
+					case 1: 
+						signInMenu();
+						break;
+					case 2:
+						signUpMenu();
+						break;
+					case 3: 
+						System.out.println("프로그램을 종료합니다.");
+						System.exit(0);
+					default:
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+				}
+			} catch(Exception e) {
+				System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
 		}
 	}
@@ -80,7 +84,6 @@ public class ContentsStorageView {
 			System.out.print("비밀번호: ");
 			String userPassword = sc.nextLine();
 			uc.signIn(userId, userPassword);
-			System.out.println("끝!");
 			if(user.getStatus() == 'D') {
 				user.setStatus('A');
 				return;
@@ -129,30 +132,35 @@ public class ContentsStorageView {
 			System.out.println("9.로그아웃");
 			
 			System.out.print("메뉴 선택 : ");
-			int selMenu = Integer.parseInt(sc.nextLine());
 			
-			switch(selMenu) {
-				case 1:
-					diaryMenu();
-					break;
-				case 2:
-					movieMenu();
-					break;
-				case 3:
-					bookMenu();
-					break;
-				case 4:
-					myPageMenu();
-					if(user.getStatus() == 'D') {  // 회원탈퇴시
+			try {
+				int selMenu = Integer.parseInt(sc.nextLine());
+				
+				switch(selMenu) {
+					case 1:
+						diaryMenu();
+						break;
+					case 2:
+						movieMenu();
+						break;
+					case 3:
+						bookMenu();
+						break;
+					case 4:
+						myPageMenu();
+						if(user.getStatus() == 'D') {  // 회원탈퇴시
+							return;
+						}
+						break;
+					case 9: 
+						uc.signOut();
+						System.out.println("로그아웃 되었습니다.");
 						return;
-					}
-					break;
-				case 9: 
-					uc.signOut();
-					System.out.println("로그아웃 되었습니다.");
-					return;
-				default:
-					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+					default:
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+				}
+			} catch(Exception e) {
+				System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
 		}
 	}
@@ -177,25 +185,29 @@ public class ContentsStorageView {
 			System.out.println("9.메인으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
-			int selMenu = Integer.parseInt(sc.nextLine());
-			switch(selMenu) {
-				case 1:
-					addContents(DIARY_TYPE);
-					break;
-				case 2:
-					getContents(DIARY_TYPE);
-					break;
-				case 3:
-					updateContents(DIARY_TYPE);
-					break;
-				case 4:
-					deleteContents(DIARY_TYPE);
-					break;
-				case 9: 
-					System.out.println("메인으로 돌아가기");
-					return;
-				default:
-					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			try {
+				int selMenu = Integer.parseInt(sc.nextLine());
+				switch(selMenu) {
+					case 1:
+						addContents(DIARY_TYPE);
+						break;
+					case 2:
+						getContents(DIARY_TYPE);
+						break;
+					case 3:
+						updateContents(DIARY_TYPE);
+						break;
+					case 4:
+						deleteContents(DIARY_TYPE);
+						break;
+					case 9: 
+						System.out.println("메인으로 돌아가기");
+						return;
+					default:
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+				}
+			} catch(Exception e) {
+				System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
 		}
 		
@@ -220,25 +232,29 @@ public class ContentsStorageView {
 			System.out.println("9.메인으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
-			int selMenu = Integer.parseInt(sc.nextLine());
-			switch(selMenu) {
-				case 1:
-					addContents(MOVIE_TYPE);
-					break;
-				case 2:
-					getContents(MOVIE_TYPE);
-					break;
-				case 3:
-					updateContents(MOVIE_TYPE);
-					break;
-				case 4:
-					deleteContents(MOVIE_TYPE);
-					break;
-				case 9: 
-					System.out.println("메인으로 돌아가기");
-					return;
-				default:
-					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			try {
+				int selMenu = Integer.parseInt(sc.nextLine());
+				switch(selMenu) {
+					case 1:
+						addContents(MOVIE_TYPE);
+						break;
+					case 2:
+						getContents(MOVIE_TYPE);
+						break;
+					case 3:
+						updateContents(MOVIE_TYPE);
+						break;
+					case 4:
+						deleteContents(MOVIE_TYPE);
+						break;
+					case 9: 
+						System.out.println("메인으로 돌아가기");
+						return;
+					default:
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+				}
+			} catch(Exception e) {
+				System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
 		}
 		
@@ -264,25 +280,29 @@ public class ContentsStorageView {
 			System.out.println("9.메인으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
-			int selMenu = Integer.parseInt(sc.nextLine());
-			switch(selMenu) {
-				case 1:
-					addContents(BOOK_TYPE);
-					break;
-				case 2:
-					getContents(BOOK_TYPE);
-					break;
-				case 3:
-					updateContents(BOOK_TYPE);
-					break;
-				case 4:
-					deleteContents(BOOK_TYPE);
-					break;
-				case 9: 
-					System.out.println("메인으로 돌아가기");
-					return;
-				default:
-					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			try {
+				int selMenu = Integer.parseInt(sc.nextLine());
+				switch(selMenu) {
+					case 1:
+						addContents(BOOK_TYPE);
+						break;
+					case 2:
+						getContents(BOOK_TYPE);
+						break;
+					case 3:
+						updateContents(BOOK_TYPE);
+						break;
+					case 4:
+						deleteContents(BOOK_TYPE);
+						break;
+					case 9: 
+						System.out.println("메인으로 돌아가기");
+						return;
+					default:
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+				}
+			} catch(Exception e) {
+				System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
 		}
 		
@@ -294,16 +314,20 @@ public class ContentsStorageView {
 			System.out.println("9.홈으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
-			int selMenu = Integer.parseInt(sc.nextLine());
-			switch(selMenu) {
-				case 1:
-					deleteUser();
-					return;
-				case 9: 
-					System.out.println("홈으로 돌아가기");
-					return;
-				default:
-					System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+			try {
+				int selMenu = Integer.parseInt(sc.nextLine());
+				switch(selMenu) {
+					case 1:
+						deleteUser();
+						return;
+					case 9: 
+						System.out.println("홈으로 돌아가기");
+						return;
+					default:
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+				}
+			} catch(Exception e) {
+				System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
 			}
 		}
 	}
@@ -398,15 +422,17 @@ public class ContentsStorageView {
 		System.out.print("수정할 컨텐츠 NO을 입력하세요. : ");
 		int rowNum = Integer.parseInt(sc.nextLine());
 		int contentsId = 0;
+		Contents target = null;
 		if(rowNum <= user.getContentsList().size()) {
-			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
+			target = user.getContentsList().get(rowNum-1);
+			contentsId = target.getContentsId();
 		}
 		
-		if(contentsId == 0) {
+		if(contentsId == 0 || target == null) {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
 			return;
 		}
-		
+		System.out.println("* 해당 항목을 건너뛰시려면 엔터를 누르세요.");
 		System.out.print("제목을 입력해주세요. : ");
 		String title = sc.nextLine();
 		
@@ -417,12 +443,27 @@ public class ContentsStorageView {
 		
 		Contents c = null;
 		
+		if(title == null || title.equals("")) {
+			title = target.getTitle();
+		}
+		
+		if(createDate == null || createDate.equals("")) {
+			createDate = target.getCreateDate();
+		}
+		
 		if(contentsType.equals(DIARY_TYPE)) { // 일기
 			System.out.print("오늘을 감정으로 표현한다면 어떤 감정일까요?(기쁨,행복,슬픔,우울 등) : ");
 			String feelings = sc.nextLine();
 			
 			System.out.print("내용 : ");
 			content = sc.nextLine();
+			
+			if(feelings == null || feelings.equals("")) {
+				feelings = ((Diary)target).getFeelings();
+			}
+			if(content == null || content.equals("")) {
+				content = target.getContent();
+			}
 			
 			c = new Diary(contentsId, contentsType, title, content, createDate, feelings);
 			
@@ -443,7 +484,7 @@ public class ContentsStorageView {
 			String place = sc.nextLine();
 			
 			System.out.print("누구와 함께 보셨나요? : ");
-			String with = sc.nextLine();
+			String withs = sc.nextLine();
 			
 			System.out.print("다른사람에게 추천할 의향이 있으신가요?(y/n) : ");
 			String isLikeYn = sc.nextLine().toLowerCase().substring(0,1);
@@ -451,7 +492,32 @@ public class ContentsStorageView {
 			System.out.print("내용 : ");
 			content = sc.nextLine();
 			
-			c = new Movie(contentsId, contentsType, title, content, createDate, releaseDate, director, actors, place, with, isLikeYn, starCount);
+			if(releaseDate == null || releaseDate.equals("")) {
+				releaseDate = ((Movie)target).getReleaseDate();
+			}
+			if(director == null || director.equals("")) {
+				director = ((Movie)target).getDirector();
+			}
+			if(actors == null || actors.equals("")) {
+				actors = ((Movie)target).getActors();
+			}
+//			if(starCount == null || starCount.equals("")) {
+//				starCount = ((Movie)target).getReleaseDate();
+//			}
+			if(place == null || place.equals("")) {
+				place = ((Movie)target).getPlace();
+			}
+			if(withs == null || withs.equals("")) {
+				withs = ((Movie)target).getWiths();
+			}
+			if(isLikeYn == null || isLikeYn.equals("")) {
+				isLikeYn = ((Movie)target).getIsLikeYn();
+			}
+			if(content == null || content.equals("")) {
+				content = target.getContent();
+			}
+			
+			c = new Movie(contentsId, contentsType, title, content, createDate, releaseDate, director, actors, place, withs, isLikeYn, starCount);
 			
 		} else { // 책
 			System.out.print("작가를 입력해주세요. : ");
@@ -471,6 +537,25 @@ public class ContentsStorageView {
 			
 			System.out.print("내용 : ");
 			content = sc.nextLine();
+			
+			if(author == null || author.equals("")) {
+				author = ((Book)target).getAuthor();
+			}
+			if(publisher == null || publisher.equals("")) {
+				publisher = ((Book)target).getPublisher();
+			}
+//			if(price == null || price.equals("")) {
+//				price = ((Book)target).getPublisher();
+//			}
+//			if(starCount == null || starCount.equals("")) {
+//				starCount = ((Book)target).getAuthor();
+//			}
+			if(isLikeYn == null || isLikeYn.equals("")) {
+				isLikeYn = ((Book)target).getIsLikeYn();
+			}
+			if(content == null || content.equals("")) {
+				content = target.getContent();
+			}
 			
 			c = new Book(contentsId, contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
