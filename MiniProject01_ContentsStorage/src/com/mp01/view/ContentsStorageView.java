@@ -1,6 +1,5 @@
 package com.mp01.view;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -160,7 +159,7 @@ public class ContentsStorageView {
 	
 	public void diaryMenu() {
 		while(true) {
-			System.out.println("*************************************");
+			System.out.println("***********************************************");
 			System.out.println(" ____  _                  ");
 			System.out.println("|  _ \\(_) __ _ _ __ _   _ ");
 			System.out.println("| | | | |/ _` | '__| | | |");
@@ -168,31 +167,28 @@ public class ContentsStorageView {
 			System.out.println("|____/|_|\\__,_|_|   \\__, |");
 			System.out.println("                     |___/ ");
 			System.out.println();
-			System.out.println("*************************************");
+			user.setContentsList(csc.getContentsList(DIARY_TYPE));
+			System.out.println("***********************************************");
 			
-			System.out.println("1.목록 보기");
-			System.out.println("2.일기 추가");
-			System.out.println("3.일기 조회");
-			System.out.println("4.일기 수정");
-			System.out.println("5.일기 삭제");
+			System.out.println("1.일기 추가");
+			System.out.println("2.일기 조회");
+			System.out.println("3.일기 수정");
+			System.out.println("4.일기 삭제");
 			System.out.println("9.메인으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
 			int selMenu = Integer.parseInt(sc.nextLine());
 			switch(selMenu) {
 				case 1:
-					getContentsList(DIARY_TYPE);
-					break;
-				case 2:
 					addContents(DIARY_TYPE);
 					break;
-				case 3:
+				case 2:
 					getContents(DIARY_TYPE);
 					break;
-				case 4:
+				case 3:
 					updateContents(DIARY_TYPE);
 					break;
-				case 5:
+				case 4:
 					deleteContents(DIARY_TYPE);
 					break;
 				case 9: 
@@ -207,38 +203,35 @@ public class ContentsStorageView {
 	
 	public void movieMenu() {
 		while(true) {
-			System.out.println("*************************************");
+			System.out.println("***********************************************");
 			System.out.println(" __  __            _      ");
 			System.out.println("|  \\/  | _____   _(_) ___ ");
 			System.out.println("| |\\/| |/ _ \\ \\ / / |/ _ \\");
 			System.out.println("| |  | | (_) \\ V /| |  __/");
 			System.out.println("|_|  |_|\\___/ \\_/ |_|\\___|");
 			System.out.println();
-			System.out.println("*************************************");
+			user.setContentsList(csc.getContentsList(MOVIE_TYPE));
+			System.out.println("***********************************************");
 			
-			System.out.println("1.목록 보기");
-			System.out.println("2.영화 추가");
-			System.out.println("3.영화 조회");
-			System.out.println("4.영화 수정");
-			System.out.println("5.영화 삭제");
+			System.out.println("1.영화 추가");
+			System.out.println("2.영화 조회");
+			System.out.println("3.영화 수정");
+			System.out.println("4.영화 삭제");
 			System.out.println("9.메인으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
 			int selMenu = Integer.parseInt(sc.nextLine());
 			switch(selMenu) {
 				case 1:
-					getContentsList(MOVIE_TYPE);
-					break;
-				case 2:
 					addContents(MOVIE_TYPE);
 					break;
-				case 3:
+				case 2:
 					getContents(MOVIE_TYPE);
 					break;
-				case 4:
+				case 3:
 					updateContents(MOVIE_TYPE);
 					break;
-				case 5:
+				case 4:
 					deleteContents(MOVIE_TYPE);
 					break;
 				case 9: 
@@ -253,38 +246,36 @@ public class ContentsStorageView {
 	
 	public void bookMenu() {
 		while(true) {
-			System.out.println("*************************************");
+			System.out.println("***********************************************");
 			System.out.println(" ____              _    ");
 			System.out.println("| __ )  ___   ___ | | __");
 			System.out.println("|  _ \\ / _ \\ / _ \\| |/ /");
 			System.out.println("| |_) | (_) | (_) |   < ");
 			System.out.println("|____/ \\___/ \\___/|_|\\_\\");
 			System.out.println();
-			System.out.println("*************************************");
+			user.setContentsList(csc.getContentsList(BOOK_TYPE));
+			System.out.println("***********************************************");
 			
-			System.out.println("1.목록 보기");
-			System.out.println("2.책 추가");
-			System.out.println("3.책 조회");
-			System.out.println("4.책 수정");
-			System.out.println("5.책 삭제");
+//			System.out.println("1.목록 보기");
+			System.out.println("1.책 추가");
+			System.out.println("2.책 조회");
+			System.out.println("3.책 수정");
+			System.out.println("4.책 삭제");
 			System.out.println("9.메인으로 돌아가기");
 			System.out.print("메뉴 선택 : ");
 			
 			int selMenu = Integer.parseInt(sc.nextLine());
 			switch(selMenu) {
 				case 1:
-					getContentsList(BOOK_TYPE);
-					break;
-				case 2:
 					addContents(BOOK_TYPE);
 					break;
-				case 3:
+				case 2:
 					getContents(BOOK_TYPE);
 					break;
-				case 4:
+				case 3:
 					updateContents(BOOK_TYPE);
 					break;
-				case 5:
+				case 4:
 					deleteContents(BOOK_TYPE);
 					break;
 				case 9: 
@@ -319,23 +310,6 @@ public class ContentsStorageView {
 	
 	public void getContentsList(String contentsType) {
 		user.setContentsList(csc.getContentsList(contentsType));
-		List<Contents> list = user.getContentsList();
-		if(!list.isEmpty()) {
-			if(contentsType.equals(DIARY_TYPE)) { // 일기
-				System.out.println("NO\t작성일\t\t제목\t\t\t감정");
-			} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
-				System.out.println("NO\t작성일\t\t제목\t\t\t개봉일\t\t감독\t출연배우\t별점");
-			} else { // 책
-				System.out.println("NO\t작성일\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
-			}
-			
-			for(int i=0; i<list.size(); i++) {
-				Contents c = list.get(i);
-				System.out.println((i+1) + "\t" + c);
-			}
-		} else {
-			System.out.println("조회된 결과가 없습니다. 새 컨텐츠를 생성하여 주세요.");
-		}
 	}
 	
 	public void addContents(String contentsType) {
@@ -407,12 +381,7 @@ public class ContentsStorageView {
 			c = new Book(contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
 		
-		if(csc.addContents(c)) {
-			System.out.println("컨텐츠가 생성 되었습니다.");
-			user.setContentsList(csc.getContentsList(contentsType)); // 목록 재조회
-		} else {
-			System.out.println("컨텐츠 생성을 실패하였습니다.");
-		}
+		csc.addContents(c);
 	}
 	
 	public void getContents(String contentsType) {
@@ -422,29 +391,10 @@ public class ContentsStorageView {
 		if(rowNum <= user.getContentsList().size()) {
 			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
-		
-		if(contentsId > 0) {
-			Contents c = csc.getContents(contentsId, contentsType);
-			
-			if(contentsType.equals(DIARY_TYPE)) { // 일기
-				System.out.println("NO\t날짜\t\t제목\t\t\t감정");
-			} else if(contentsType.equals(MOVIE_TYPE)) { // 영화
-				System.out.println("NO\t날짜\t\t제목\t\t\t개봉일\t\t감독\t출연배우\t별점");
-			} else { // 책
-				System.out.println("NO\t날짜\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
-			}
-			System.out.println(rowNum + "\t" + c);
-			System.out.println("내용:");
-			System.out.println(c.getContent());
-			
-		} else {
-			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
-		}
+		csc.getContents(contentsId, contentsType);
 	}
 	
 	public void updateContents(String contentsType) {
-		boolean result = false;
-		
 		System.out.print("수정할 컨텐츠 NO을 입력하세요. : ");
 		int rowNum = Integer.parseInt(sc.nextLine());
 		int contentsId = 0;
@@ -452,7 +402,7 @@ public class ContentsStorageView {
 			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
 		
-		if(contentsId == 0 || csc.getContents(contentsId, contentsType) == null) {
+		if(contentsId == 0) {
 			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
 			return;
 		}
@@ -525,14 +475,7 @@ public class ContentsStorageView {
 			c = new Book(contentsId, contentsType, title, content, createDate, author, publisher, price, isLikeYn, starCount);
 		}
 		
-		result = csc.updateContents(c);
-		
-		if(result) {
-			System.out.println("컨텐츠가 수정 되었습니다.");
-			user.setContentsList(csc.getContentsList(contentsType));
-		} else {
-			System.out.println("컨텐츠 수정을 실패하였습니다.");
-		}
+		csc.updateContents(c);
 	}
 	
 	public void deleteContents(String contentsType) {
@@ -542,13 +485,7 @@ public class ContentsStorageView {
 		if(rowNum <= user.getContentsList().size()) {
 			contentsId = user.getContentsList().get(rowNum-1).getContentsId();
 		}
-		
-		if(contentsId > 0 && csc.deleteContents(contentsId, contentsType)) {
-			System.out.println("컨텐츠가 삭제 되었습니다.");
-			user.setContentsList(csc.getContentsList(contentsType));
-		} else {
-			System.out.println("입력하신 컨텐츠 NO과 일치하는 컨텐츠가 없습니다.");
-		}
+		csc.deleteContents(contentsId, contentsType);
 	}
 	
 	public boolean deleteUser() {
@@ -571,5 +508,41 @@ public class ContentsStorageView {
 	
 	public void displayFailed(String message) {
 		System.out.println("[요청 실패] " + message);
+	}
+	
+	public void displayContents(Contents c) {
+		System.out.println("=================================================");
+		if(c instanceof Diary) { // 일기
+			System.out.println("날짜\t\t제목\t\t\t감정");
+		} else if(c instanceof Movie) { // 영화
+			System.out.println("날짜\t\t제목\t\t\t개봉일\t\t감독\t\t출연배우\t\t별점");
+		} else { // 책
+			System.out.println("날짜\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
+		}
+		System.out.println(c);
+		System.out.println("=================================================");
+		System.out.println("내용:");
+		System.out.println(c.getContent() + "\n");
+		System.out.println("=================================================");
+		System.out.print("뒤로 가시려면 아무키나 입력하세요. : ");
+		sc.nextLine();
+	}
+	
+	public void displayContentsList(List<Contents> list) {
+		if(!list.isEmpty()) {
+			Contents c = list.get(0);
+			if(c instanceof Diary) { // 일기
+				System.out.println("NO\t작성일\t\t제목\t\t\t감정");
+			} else if(c instanceof Movie) { // 영화
+				System.out.println("NO\t작성일\t\t제목\t\t\t개봉일\t\t감독\t\t출연배우\t\t별점");
+			} else { // 책
+				System.out.println("NO\t작성일\t\t제목\t\t\t작가\t\t출판사\t\t가격\t별점");
+			}
+			
+			for(int i=0; i<list.size(); i++) {
+				c = list.get(i);
+				System.out.println((i+1) + "\t" + c);
+			}
+		}
 	}
 }
