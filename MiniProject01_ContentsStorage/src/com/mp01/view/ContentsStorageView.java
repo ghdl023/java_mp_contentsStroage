@@ -87,18 +87,15 @@ public class ContentsStorageView {
 	
 			System.out.print("비밀번호: ");
 			String userPassword = sc.nextLine();
-			boolean result = uc.signIn(userId, userPassword);
+			int result = uc.signIn(userId, userPassword);
 			
-			if(result) {
-				user.setUserId(userId);
+			if(result > 0) {
+				user.setUserId(result);
+				user.setUserName(userId);
 				user.setUserPassword(userPassword);
 				return true;
 			}
 			
-//			if(user.getStatus() == 'D') {
-//				user.setStatus('A');
-//				return false;
-//			}
 		}
 	}
 	
@@ -115,17 +112,13 @@ public class ContentsStorageView {
 			System.out.print("비밀번호: ");
 			String userPassword = sc.nextLine();
 			
-			boolean result = uc.signUp(userId, userPassword);
-			if(result) {
-				user.setUserId(userId);
+			int result = uc.signUp(userId, userPassword);
+			if(result > 0) {
+				user.setUserId(result);
+				user.setUserName(userId);
 				user.setUserPassword(userPassword);
 				return true;
 			} 
-			
-//			if(user.getStatus() == 'D') {
-//				user.setStatus('A');
-//				return false;
-//			}
 		}
 	}
 	
@@ -170,7 +163,8 @@ public class ContentsStorageView {
 						break;
 					case 9: 
 						if(user.isLogin()) {
-							user.setUserId("");
+							user.setUserId(0);
+							user.setUserName("");
 							user.setUserPassword("");
 						}
 						System.out.println("로그아웃 되었습니다.");
@@ -599,9 +593,10 @@ public class ContentsStorageView {
 		String userInput = sc.nextLine();
 		
 		if(userInput.equals("탈퇴")) {
-			boolean result = uc.deleteUser(user.getUserId());
+			boolean result = uc.deleteUser(user.getUserName());
 			if(result) {
-				user.setUserId("");
+				user.setUserId(0);
+				user.setUserName("");
 				user.setUserPassword("");
 				user.setStatus('D');
 				return true;

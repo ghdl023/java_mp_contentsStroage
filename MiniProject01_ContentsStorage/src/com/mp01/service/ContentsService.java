@@ -11,7 +11,7 @@ public class ContentsService {
 	
 	private ContentsRepository contentsRepository = new ContentsRepository();
 
-	public boolean addContents(String userId, Contents c) {
+	public boolean addContents(int userId, Contents c) {
 		Connection conn = DBCP.getConnection(false);
 		int result = contentsRepository.addContents(conn, userId, c);
 		
@@ -24,12 +24,12 @@ public class ContentsService {
 		return result == 1;
 	}
 	
-	public Contents getContents(String userId, int contentsId, String contentsType) {
+	public Contents getContents(int userId, int contentsId, String contentsType) {
 		Connection conn = DBCP.getConnection(true);
 		return contentsRepository.getContents(conn, userId, contentsId, contentsType);
 	}
 	
-	public boolean updateContents(String userId, Contents c) {
+	public boolean updateContents(int userId, Contents c) {
 		Connection conn = DBCP.getConnection(false);
 		int result = contentsRepository.updateContents(conn, userId, c);
 		
@@ -42,7 +42,7 @@ public class ContentsService {
 		return result == 1;
 	}
 	
-	public boolean deleteContents(String userId, int contentsId, String contentsType) {
+	public boolean deleteContents(int userId, int contentsId, String contentsType) {
 		Connection conn = DBCP.getConnection(false);
 		int result = contentsRepository.deleteContents(conn, userId, contentsId, contentsType);
 		
@@ -55,7 +55,7 @@ public class ContentsService {
 		return result == 1;
 	}
 	
-	public List<Contents> getContentsList(String userId, String contentsType) {
+	public List<Contents> getContentsList(int userId, String contentsType) {
 		Connection conn = DBCP.getConnection(true);
 		return contentsRepository.getContentsList(conn, userId, contentsType);
 	}

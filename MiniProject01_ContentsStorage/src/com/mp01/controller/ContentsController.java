@@ -9,7 +9,7 @@ import com.mp01.view.ContentsStorageView;
 public class ContentsController {
 	private ContentsService contentsService = new ContentsService();
 	
-	public void addContents(String userId, Contents c) {
+	public void addContents(int userId, Contents c) {
 		boolean result = contentsService.addContents(userId, c);
 		if(result) {
 			new ContentsStorageView().displaySuccess("컨텐츠가 추가 되었습니다.");
@@ -18,7 +18,7 @@ public class ContentsController {
 		}
 	}
 	
-	public void getContents(String userId, int contentsId, String contentsType) {
+	public void getContents(int userId, int contentsId, String contentsType) {
 		Contents c = contentsService.getContents(userId, contentsId, contentsType);
 		
 		if(c != null) {
@@ -28,7 +28,7 @@ public class ContentsController {
 		}
 	}
 	
-	public void updateContents(String userId, Contents c) {
+	public void updateContents(int userId, Contents c) {
 		boolean result = contentsService.updateContents(userId, c);
 		
 		if(result) {
@@ -38,7 +38,7 @@ public class ContentsController {
 		}
 	}
 	
-	public void deleteContents(String userId, int contentsId, String contentsType) {
+	public void deleteContents(int userId, int contentsId, String contentsType) {
 		boolean result = contentsService.deleteContents(userId, contentsId, contentsType);
 		if(result) {
 			new ContentsStorageView().displaySuccess("컨텐츠가 삭제 되었습니다.");
@@ -47,7 +47,7 @@ public class ContentsController {
 		}
 	}
 	
-	public List<Contents> getContentsList(String userId, String contentsType) {
+	public List<Contents> getContentsList(int userId, String contentsType) {
 		List<Contents> list = contentsService.getContentsList(userId, contentsType);
 		if(!list.isEmpty()) {
 			new ContentsStorageView().displayContentsList(list);

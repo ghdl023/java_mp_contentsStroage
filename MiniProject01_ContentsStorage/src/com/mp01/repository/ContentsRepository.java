@@ -30,7 +30,7 @@ public class ContentsRepository {
 		}
 	}
 
-	public List<Contents> getContentsList(Connection connection, String userId, String contentsType) {
+	public List<Contents> getContentsList(Connection connection, int userId, String contentsType) {
 		List<Contents> list = new ArrayList<>();
 
 		String sql = "";
@@ -45,13 +45,13 @@ public class ContentsRepository {
 		}
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-			preparedStatement.setString(1, userId);
+			preparedStatement.setInt(1, userId);
 			try (ResultSet resultSet = preparedStatement.executeQuery()){
 
 				while(resultSet.next()) {
 					Contents c = null;
 
-					int contentsId = resultSet.getInt("id");
+					int contentsId = resultSet.getInt("contents_id");
 					String title = resultSet.getString("title");
 					String content = resultSet.getString("content");
 					String createDate = resultSet.getString("create_date");
@@ -96,33 +96,23 @@ public class ContentsRepository {
 		return list;
 	}
 
-	public int addContents(Connection connection, String userId, Contents c) {
+	public int addContents(Connection connection, int userId, Contents c) {
 		int result = 0;
 
 		String sql = prop.getProperty("addContents.contents");
 		
-		try (PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
-
-			// Auto Commit off setting
-//			connection.setAutoCommit(false); // 또는 Run Configuration > Arguments > VM 에 다음 명령어 "-Doracle.jdbc.autoCommitSpecCompliant=false"
-//			Savepoint sp = connection.setSavepoint();
-			
-			//			System.out.println(c.getTitle());
-			//			System.out.println(c.getContent());
-			//			System.out.println(c.getCreateDate());
-			//			System.out.println(user.getUserId());
-
+		try (PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"CONTENTS_ID"})) { // Statement.RETURN_GENERATED_KEYS not working...
 			int contents_type_id = c instanceof Diary ? 1 : (c instanceof Movie ? 2 : 3);
 
 			preparedStatement.setString(1, c.getTitle());
 			preparedStatement.setString(2, c.getContent());
 			preparedStatement.setString(3, c.getCreateDate());
 			preparedStatement.setInt(4, contents_type_id);
-			preparedStatement.setString(5, userId);
+			preparedStatement.setInt(5, userId);
 
 			result = preparedStatement.executeUpdate();
 			
-			//			System.out.println("insertCount: " + insertCount );
+//			System.out.println("insertCount: " + result );
 
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 			int generatedKey = 0;
@@ -131,7 +121,7 @@ public class ContentsRepository {
 				generatedKey = rs.getInt(1);
 			}
 
-			//			System.out.println("Inserted record's ID: " + generatedKey);
+//			System.out.println("Inserted record's ID: " + generatedKey);
 
 			if(c instanceof Diary) {
 				Diary d = (Diary)c;
@@ -141,7 +131,7 @@ public class ContentsRepository {
 					preparedStatement2.setString(2, d.getFeelings());
 
 					result = preparedStatement2.executeUpdate();
-					//					System.out.println("insertCount: " + insertCount );
+//					System.out.println("insertCount: " + result );
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -193,7 +183,7 @@ public class ContentsRepository {
 		return result;
 	}
 
-	public Contents getContents(Connection connection, String userId, int contentsId, String contentsType) {
+	public Contents getContents(Connection connection, int userId, int contentsId, String contentsType) {
 		String sql = "";
 
 		if(contentsType.equals(ContentsStorageView.DIARY_TYPE)) {
@@ -210,7 +200,7 @@ public class ContentsRepository {
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 			preparedStatement.setInt(1, contentsId);
-			preparedStatement.setString(2, userId);
+			preparedStatement.setInt(2, userId);
 			try (ResultSet resultSet = preparedStatement.executeQuery()){
 
 				while(resultSet.next()) {
@@ -255,7 +245,7 @@ public class ContentsRepository {
 		return c;
 	}
 
-	public int updateContents(Connection connection, String userId, Contents c) {
+	public int updateContents(Connection connection, int userId, Contents c) {
 		int result = 0;
 
 		String contentsType = c.getType();
@@ -271,7 +261,7 @@ public class ContentsRepository {
 			preparedStatement.setString(2, c.getContent());
 			preparedStatement.setString(3, c.getCreateDate());
 			preparedStatement.setInt(4, c.getContentsId());
-			preparedStatement.setString(5, userId);
+			preparedStatement.setInt(5, userId);
 
 			result = preparedStatement.executeUpdate();
 
@@ -333,13 +323,13 @@ public class ContentsRepository {
 		return result;
 	}
 
-	public int deleteContents(Connection connection, String userId, int contentsId, String contentsType) {
+	public int deleteContents(Connection connection, int userId, int contentsId, String contentsType) {
 		String sql = prop.getProperty("deleteContents");
 		int result = 0;
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
 			preparedStatement.setInt(1, contentsId);
-			preparedStatement.setString(2, userId);
+			preparedStatement.setInt(2, userId);
 			
 			result = preparedStatement.executeUpdate();
 

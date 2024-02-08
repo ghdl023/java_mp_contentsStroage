@@ -10,10 +10,10 @@ public class UserService {
 
 	private UserRepository userRepository = new UserRepository();
 	
-	public boolean signUp(String id, String password) {
+	public int signUp(String id, String password) {
 		Connection conn = DBCP.getConnection(false);
 		int result = 0;
-		result  = userRepository.signUp(conn, id, password); 
+		result = userRepository.signUp(conn, id, password); 
 
 		if(result > 0) { // 유저정보가 있으면 로그인
 			DBCP.commit(conn);
@@ -21,21 +21,21 @@ public class UserService {
 			DBCP.rollback(conn);
 		}
 		
-		return result == 1;
+		return result;
 	}
 
-	public boolean signIn(String id, String password) {
+	public int signIn(String id, String password) {
 		Connection conn = DBCP.getConnection(true);
 		int result = 0;
 		result = userRepository.signIn(conn, id, password);
 		
-		return result == 1;
+		return result;
 	}
 	
-	public boolean deleteUser(String userId) {
+	public boolean deleteUser(String userName) {
 		Connection conn = DBCP.getConnection(false);
 		int result = 0;
-		result = userRepository.deleteUser(conn, userId);
+		result = userRepository.deleteUser(conn, userName);
 		
 		if(result > 0) {
 			DBCP.commit(conn);

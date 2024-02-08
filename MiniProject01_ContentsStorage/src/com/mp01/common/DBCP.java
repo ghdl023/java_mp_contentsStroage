@@ -7,7 +7,9 @@ import java.util.Properties;
 
 import javax.sql.PooledConnection;
 
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
+import oracle.jdbc.driver.*;
+import oracle.jdbc.pool.*;
+
 
 public class DBCP {
 	
@@ -21,7 +23,7 @@ public class DBCP {
 			prop.load(new FileInputStream("resource/jdbc.properties"));
 //			System.out.println(prop);
 			
-			ocpds.setURL(prop.getProperty("DATABASE_URL_LOCALHOST"));
+			ocpds.setURL(prop.getProperty("DATABASE_URL"));
 			ocpds.setUser(prop.getProperty("DATABASE_USER_ID"));
 			ocpds.setPassword(prop.getProperty("DATABASE_USER_PW"));
 

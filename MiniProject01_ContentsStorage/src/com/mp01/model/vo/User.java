@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-	private String userId;
-	private String userPassword;
-	private boolean isLogin;
-	private char status = 'A'; // 계정상태여부 (A: 활성화, D: 탈퇴)
+	private int userId;				// DB ROW_ID
+	private String userName;		// 유저 ID
+	private String userPassword;	// 유저 PASSWORD
+	private boolean isLogin;		// 로그인 여부
+	private char status = 'A'; 		// 계정상태 여부 (A: 활성화, D: 탈퇴)
 	private List<Contents> contentsList = new ArrayList<Contents>();
 	
 	private static User instance = new User();
@@ -16,18 +17,27 @@ public class User {
 	
 	}
 	
-	public User(String userId, String userPassword) {
+	public User(int userId, String userName, String userPassword) {
 		this.userId = userId;
 		this.userPassword = userPassword;
 		isLogin = true;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getUserPassword() {
@@ -39,7 +49,7 @@ public class User {
 	}
 
 	public boolean isLogin() {
-		return (userId != null && !userId.equals("")) && (userPassword != null && !userPassword.equals(""));
+		return (userName != null && !userName.equals("")) && (userPassword != null && !userPassword.equals(""));
 	}
 	
 	public char getStatus() {
