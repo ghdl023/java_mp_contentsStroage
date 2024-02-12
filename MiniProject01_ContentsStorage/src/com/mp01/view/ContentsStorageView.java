@@ -25,14 +25,14 @@ public class ContentsStorageView {
 	public void mainMenu() {
 		while(true) {
 			System.out.println("***********************************************");
-			System.out.println(" __  __                           _           ");
-			System.out.println("|  \\/  | ___ _ __ ___   ___  _ __(_) ___  ___ ");
-			System.out.println("| |\\/| |/ _ \\ '_ ` _ \\ / _ \\| '__| |/ _ \\/ __|");
-			System.out.println("| |  | |  __/ | | | | | (_) | |  | |  __/\\__ \\");
-			System.out.println("|_|  |_|\\___|_| |_| |_|\\___/|_|  |_|\\___||___/");
+			System.out.println(" __        __   _                          ");
+			System.out.println(" \\ \\      / /__| | ___ ___  _ __ ___   ___ ");
+			System.out.println("  \\ \\ /\\ / / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\");
+			System.out.println("   \\ V  V /  __/ | (_| (_) | | | | | |  __/");
+			System.out.println("    \\_/\\_/ \\___|_|\\___\\___/|_| |_| |_|\\___|");
 			System.out.println();
 			System.out.println("***********************************************");
-
+			
 			System.out.println("1.로그인");
 			System.out.println("2.회원가입");
 			System.out.println("3.프로그램 종료");
@@ -101,6 +101,14 @@ public class ContentsStorageView {
 	
 	public boolean signUpMenu() {
 		while(true) {
+			System.out.println("***********************************************");
+			System.out.println("   ____  _             _   _       ");
+			System.out.println("  / ___|(_) __ _ _ __ | | | |_ __  ");
+			System.out.println("  \\___ \\| |/ _` | '_ \\| | | | '_ \\ ");
+			System.out.println("   ___) | | (_| | | | | |_| | |_) |");
+			System.out.println("  |____/|_|\\__, |_| |_|\\___/| .__/ ");
+			System.out.println("           |___/            |_|    ");
+			System.out.println("***********************************************");
 			System.out.println(">>>> 메인화면으로 이동하려면 exit를 입력하세요.");
 			System.out.print("아이디: " );
 			String userId = sc.nextLine();
